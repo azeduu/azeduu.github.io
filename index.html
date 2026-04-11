@@ -118,7 +118,7 @@
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text; letter-spacing: 2px; margin-top: 8px;
         }
-        .logo-sub { font-size: 12px; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; margin-top: 4px; }
+        .logo-sub { font-size: 11px; color: var(--text2); letter-spacing: 4px; text-transform: uppercase; margin-top: 4px; }
 
 
         .quiz-list-home { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; animation: fadeUp 0.8s ease 0.3s both; }
@@ -226,7 +226,6 @@
         .option-btn:active:not(:disabled) { transform: none; }
         .option-btn:hover:not(:disabled) { border-color: rgba(0,229,255,0.4); background: rgba(0,229,255,0.07); box-shadow: 0 4px 20px rgba(0,229,255,0.1); }
 
-        /* OPTION LETTER BADGE — gradient, yuvarlaq */
         .option-letter {
           width: 40px; height: 40px;
           border-radius: 12px;
@@ -238,7 +237,6 @@
           box-shadow: 0 3px 12px rgba(0,229,255,0.35);
         }
 
-        /* SEÇİLMİŞ OPTION */
         .option-btn.selected {
           border-color: var(--accent);
           background: rgba(124,77,255,0.15);
@@ -250,7 +248,7 @@
           color: white;
         }
 
-        /* FOOTER DÜYMƏLƏRİ */
+        /* FOOTER */
         .quiz-footer { padding: 14px 16px; background: var(--card); border-top: 1px solid var(--border); display: flex; gap: 12px; }
         #prevBtn {
           flex: 1;
@@ -377,16 +375,18 @@
         ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
         @media(max-width:380px){.home-stats{gap:8px}.nav-dot{width:26px;height:26px;font-size:10px}}
 
-        /* SUPER SINAQ TITLE */
+        /* ============================================================
+           SUPER SINAQ TITLE — RESPONSİV LOGO
+        ============================================================ */
         .super-sinaq-title {
-          font-size: 42px;
+          font-size: clamp(20px, 5.5vw, 42px);
           font-weight: 900;
           font-family: 'Exo 2', sans-serif;
           background: linear-gradient(135deg, #00e5ff 0%, #7c4dff 50%, #ff6b35 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          letter-spacing: 3px;
+          letter-spacing: clamp(1px, 0.5vw, 3px);
           text-transform: uppercase;
           cursor: pointer;
           user-select: none;
@@ -394,6 +394,14 @@
           text-shadow: none;
           filter: drop-shadow(0 0 20px rgba(0,229,255,0.4));
           line-height: 1.1;
+        }
+
+        /* Çox kiçik ekranlar üçün əlavə azaldma */
+        @media (max-width: 360px) {
+          .super-sinaq-title {
+            font-size: 18px;
+            letter-spacing: 1px;
+          }
         }
 
         /* HAMBURGER */
@@ -499,131 +507,43 @@
           background-clip: text;
           filter: drop-shadow(0 0 10px rgba(0,119,170,0.2));
         }
-        body.light-mode .hamburger-btn {
-          color: var(--primary);
-        }
-        body.light-mode .toast {
-          background: #ffffff;
-          color: #1a2535;
-          border-color: rgba(0,119,170,0.2);
-        }
-        body.light-mode .input-field {
-          background: #f0f4f8;
-          color: #1a2535;
-        }
+        body.light-mode .hamburger-btn { color: var(--primary); }
+        body.light-mode .toast { background: #ffffff; color: #1a2535; border-color: rgba(0,119,170,0.2); }
+        body.light-mode .input-field { background: #f0f4f8; color: #1a2535; }
         body.light-mode .timer-text { color: var(--primary); }
         body.light-mode .option-btn { color: var(--text); }
         body.light-mode select.input-field option { background: #ffffff; color: #1a2535; }
 
         /* SIDE MENU CLOSE BUTTON */
         .menu-close-btn {
-          width: 32px;
-          height: 32px;
-          border-radius: 10px;
-          border: 1px solid var(--border);
-          background: var(--bg3);
-          color: var(--text2);
-          font-size: 15px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s;
-          flex-shrink: 0;
+          width: 32px; height: 32px; border-radius: 10px;
+          border: 1px solid var(--border); background: var(--bg3);
+          color: var(--text2); font-size: 15px; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          transition: all 0.2s; flex-shrink: 0;
         }
-        .menu-close-btn:hover {
-          background: var(--error);
-          border-color: var(--error);
-          color: #fff;
-          transform: rotate(90deg);
-        }
-        .menu-close-btn:active {
-          transform: rotate(90deg) scale(0.9);
-        }
+        .menu-close-btn:hover { background: var(--error); border-color: var(--error); color: #fff; transform: rotate(90deg); }
+        .menu-close-btn:active { transform: rotate(90deg) scale(0.9); }
 
         /* SIDE MENU DIVIDER */
-        .side-menu-divider {
-          height: 1px;
-          background: var(--border);
-          margin: 6px 0;
-        }
+        .side-menu-divider { height: 1px; background: var(--border); margin: 6px 0; }
 
         /* ELANLAR IN SIDE MENU */
-        .side-menu-elanlar {
-          flex: 1;
-          overflow-y: auto;
-          padding: 8px 0;
-        }
-        .elan-item {
-          border-bottom: 1px solid rgba(255,255,255,0.04);
-          overflow: hidden;
-        }
-        .elan-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 14px 20px;
-          cursor: pointer;
-          transition: background 0.2s;
-          gap: 10px;
-        }
+        .side-menu-elanlar { flex: 1; overflow-y: auto; padding: 8px 0; }
+        .elan-item { border-bottom: 1px solid rgba(255,255,255,0.04); overflow: hidden; }
+        .elan-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; cursor: pointer; transition: background 0.2s; gap: 10px; }
         .elan-header:hover { background: rgba(0,229,255,0.06); }
-        .elan-header-title {
-          font-size: 14px;
-          font-weight: 700;
-          color: var(--text);
-          flex: 1;
-          line-height: 1.3;
-        }
-        .elan-arrow {
-          font-size: 11px;
-          color: var(--primary);
-          transition: transform 0.25s;
-          flex-shrink: 0;
-        }
+        .elan-header-title { font-size: 14px; font-weight: 700; color: var(--text); flex: 1; line-height: 1.3; }
+        .elan-arrow { font-size: 11px; color: var(--primary); transition: transform 0.25s; flex-shrink: 0; }
         .elan-arrow.open { transform: rotate(180deg); }
-        .elan-body {
-          display: none;
-          padding: 0 20px 14px;
-          flex-direction: column;
-          gap: 10px;
-        }
+        .elan-body { display: none; padding: 0 20px 14px; flex-direction: column; gap: 10px; }
         .elan-body.open { display: flex; }
-        .elan-body-text {
-          font-size: 13px;
-          color: var(--text2);
-          line-height: 1.6;
-        }
-        .elan-link-btn {
-          display: inline-block;
-          padding: 8px 16px;
-          background: linear-gradient(135deg, var(--primary), #0094aa);
-          color: #000;
-          font-size: 12px;
-          font-weight: 700;
-          border-radius: 8px;
-          text-decoration: none;
-          text-align: center;
-          font-family: 'Exo 2', sans-serif;
-        }
-        .elan-empty {
-          padding: 20px;
-          text-align: center;
-          font-size: 12px;
-          color: var(--text2);
-        }
+        .elan-body-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+        .elan-link-btn { display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, var(--primary), #0094aa); color: #000; font-size: 12px; font-weight: 700; border-radius: 8px; text-decoration: none; text-align: center; font-family: 'Exo 2', sans-serif; }
+        .elan-empty { padding: 20px; text-align: center; font-size: 12px; color: var(--text2); }
 
         /* ELAN MGR in admin */
-        .elan-mgr-card {
-          background: var(--card);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          padding: 12px 14px;
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-          margin-bottom: 7px;
-        }
+        .elan-mgr-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 7px; }
         .elan-mgr-info { flex: 1; }
         .elan-mgr-title { font-size: 14px; font-weight: 700; color: var(--text); }
         .elan-mgr-meta { font-size: 11px; color: var(--text2); margin-top: 3px; }
@@ -637,37 +557,17 @@
         .ads-toggle input:checked + .ads-slider:before { transform: translateX(20px); background: #000; }
 
         /* CATEGORY STYLES */
-        .cat-section-title {
-          font-size: 11px; color: var(--primary); text-transform: uppercase;
-          letter-spacing: 2px; font-weight: 700; padding: 10px 20px 6px;
-          border-bottom: 1px solid var(--border); margin-top: 6px;
-        }
-        .cat-menu-item {
-          display: flex; align-items: center; gap: 12px;
-          padding: 14px 20px; cursor: pointer;
-          border-bottom: 1px solid rgba(255,255,255,0.03);
-          transition: background 0.2s; font-size: 14px; font-weight: 600; color: var(--text);
-        }
+        .cat-section-title { font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; padding: 10px 20px 6px; border-bottom: 1px solid var(--border); margin-top: 6px; }
+        .cat-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s; font-size: 14px; font-weight: 600; color: var(--text); }
         .cat-menu-item:hover { background: rgba(0,229,255,0.06); }
         .cat-menu-item:active { background: rgba(0,229,255,0.12); }
         .cat-menu-icon { font-size: 20px; flex-shrink: 0; }
-        .cat-menu-badge {
-          margin-left: auto; background: var(--primary); color: #000;
-          font-size: 11px; font-weight: 700; padding: 2px 8px;
-          border-radius: 20px; font-family: 'Rajdhani', sans-serif;
-        }
+        .cat-menu-badge { margin-left: auto; background: var(--primary); color: #000; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; font-family: 'Rajdhani', sans-serif; }
         #categoryScreen { padding: 0; }
-        .cat-header {
-          background: var(--card); border-bottom: 1px solid var(--border);
-          padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-          position: sticky; top: 0; z-index: 10;
-        }
+        .cat-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 14px 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 10; }
         .cat-header h2 { font-size: 18px; font-weight: 700; color: var(--primary); flex: 1; }
         .cat-body { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .cat-mgr-card {
-          background: var(--card); border: 1px solid var(--border); border-radius: 13px;
-          padding: 13px 15px; display: flex; align-items: center; gap: 11px; margin-bottom: 7px;
-        }
+        .cat-mgr-card { background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 13px 15px; display: flex; align-items: center; gap: 11px; margin-bottom: 7px; }
         .cat-mgr-icon { font-size: 26px; flex-shrink: 0; }
         .cat-mgr-info { flex: 1; }
         .cat-mgr-name { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -675,87 +575,26 @@
         .last10-section { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; animation: fadeUp 0.8s ease 0.45s both; }
 
         /* ================================================================
-           DESKTOP LAYOUT (768px+) — Yuxarı navbar
+           DESKTOP LAYOUT (768px+)
         ================================================================ */
-        .desktop-navbar {
-          display: none;
-          position: fixed;
-          top: 0; left: 0; right: 0;
-          height: 60px;
-          background: var(--card);
-          border-bottom: 1px solid var(--border);
-          z-index: 500;
-          align-items: center;
-          padding: 0 20px;
-          gap: 6px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .desktop-navbar .nav-logo {
-          font-size: 15px; font-weight: 900;
-          background: linear-gradient(135deg, var(--primary), var(--accent));
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; letter-spacing: 1px;
-          margin-right: 10px; white-space: nowrap; flex-shrink: 0;
-          cursor: pointer; line-height: 1;
-        }
-        .desktop-navbar .nav-items {
-          display: flex; align-items: center; gap: 2px; flex: 1;
-        }
-        .desktop-navbar .nav-item {
-          padding: 7px 13px; border-radius: 9px;
-          font-size: 13px; font-weight: 600;
-          color: var(--text2); cursor: pointer;
-          transition: all 0.2s; white-space: nowrap;
-          border: none; background: transparent;
-          font-family: "Exo 2", sans-serif;
-          user-select: none;
-        }
+        .desktop-navbar { display: none; position: fixed; top: 0; left: 0; right: 0; height: 60px; background: var(--card); border-bottom: 1px solid var(--border); z-index: 500; align-items: center; padding: 0 20px; gap: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .desktop-navbar .nav-logo { font-size: 15px; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 1px; margin-right: 10px; white-space: nowrap; flex-shrink: 0; cursor: pointer; line-height: 1; }
+        .desktop-navbar .nav-items { display: flex; align-items: center; gap: 2px; flex: 1; }
+        .desktop-navbar .nav-item { padding: 7px 13px; border-radius: 9px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; transition: all 0.2s; white-space: nowrap; border: none; background: transparent; font-family: "Exo 2", sans-serif; user-select: none; }
         .desktop-navbar .nav-item:hover { background: rgba(0,229,255,0.08); color: var(--text); }
-        .desktop-navbar .nav-right {
-          display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-        }
-        .desktop-navbar .nav-icon-btn {
-          width: 36px; height: 36px; border-radius: 10px;
-          background: var(--bg3); border: 1px solid var(--border);
-          color: var(--text2); font-size: 16px; cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-          transition: all 0.2s;
-        }
+        .desktop-navbar .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .desktop-navbar .nav-icon-btn { width: 36px; height: 36px; border-radius: 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         .desktop-navbar .nav-icon-btn:hover { background: rgba(0,229,255,0.1); color: var(--primary); }
 
-        /* Dropdown ümumi */
+        /* Dropdown */
         .nav-dropdown { position: relative; }
-        .nav-dropdown-menu {
-          display: none;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          background: var(--card);
-          border: 1px solid var(--border);
-          border-radius: 13px;
-          min-width: 240px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-          overflow: hidden;
-          z-index: 9999;
-          max-height: 420px;
-          overflow-y: auto;
-          padding-top: 6px;
-        }
+        .nav-dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--card); border: 1px solid var(--border); border-radius: 13px; min-width: 240px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); overflow: hidden; z-index: 9999; max-height: 420px; overflow-y: auto; padding-top: 6px; }
         .nav-dropdown-menu.right { left: auto; right: 0; width: 280px; }
-        .nav-dropdown:hover .nav-dropdown-menu,
-        .nav-dropdown.open .nav-dropdown-menu { display: block; }
-        .nav-dropdown-item {
-          padding: 12px 16px; font-size: 13px; font-weight: 600;
-          color: var(--text); cursor: pointer;
-          border-bottom: 1px solid rgba(255,255,255,0.04);
-          transition: background 0.15s; display: flex; align-items: center; gap: 10px;
-        }
+        .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown.open .nav-dropdown-menu { display: block; }
+        .nav-dropdown-item { padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; display: flex; align-items: center; gap: 10px; }
         .nav-dropdown-item:hover { background: rgba(0,229,255,0.08); }
         .nav-dropdown-item:last-child { border-bottom: none; }
-        .nav-dropdown-elan {
-          padding: 13px 16px;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .nav-dropdown-elan { padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .nav-dropdown-elan:last-child { border-bottom: none; }
 
         @media (min-width: 768px) {
@@ -763,36 +602,18 @@
           .menu-overlay  { display: none !important; }
           .side-menu     { display: none !important; }
           .desktop-navbar { display: flex !important; }
-
-          /* Admin paneldə navbar olmasın */
-          #adminScreen.active ~ * .desktop-navbar,
           body.admin-mode .desktop-navbar { display: none !important; }
-
-          /* Ekranlar navbar altından başlasın — admin xaric */
-          #homeScreen, #categoryScreen, #quizScreen, #resultScreen {
-            padding-top: 60px;
-          }
+          #homeScreen, #categoryScreen, #quizScreen, #resultScreen { padding-top: 60px; }
           #adminLogin { padding-top: 80px; }
-
-          #homeScreen {
-            align-items: center !important;
-            padding-left: 32px !important;
-            padding-right: 32px !important;
-          }
+          #homeScreen { align-items: center !important; padding-left: 32px !important; padding-right: 32px !important; }
           .last10-section { max-width: 900px !important; width: 100%; }
-          #last10List {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 12px !important;
-          }
-          #categoryScreen .cat-body {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 12px !important; align-items: start !important;
-          }
+          #last10List { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+          #categoryScreen .cat-body { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; align-items: start !important; }
           .quiz-body { max-width: 700px; margin: 0 auto; width: 100%; }
           .question-card { padding: 28px 26px; }
           .q-text { font-size: 20px; }
+          /* Desktop-da logo böyük ola bilər */
+          .super-sinaq-title { font-size: 38px; letter-spacing: 3px; }
         }
 
         @media (min-width: 1100px) {
@@ -800,72 +621,30 @@
           .last10-section { max-width: 1100px !important; }
           #categoryScreen .cat-body { grid-template-columns: repeat(3, 1fr) !important; }
         }
+
         /* QUIZ PREVIEW SCREEN */
-        #quizPreviewScreen {
-          align-items: center;
-          justify-content: center;
-          padding: 30px 20px;
-          gap: 0;
-          overflow-y: auto;
-          min-height: 100vh;
-        }
-        .preview-card {
-          background: var(--card);
-          border: 1px solid var(--border);
-          border-radius: 24px;
-          padding: 32px 26px;
-          width: 100%;
-          max-width: 440px;
-          box-shadow: var(--glow2);
-          animation: modalIn 0.35s ease;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 18px;
-          text-align: center;
-        }
+        #quizPreviewScreen { align-items: center; justify-content: center; padding: 30px 20px; gap: 0; overflow-y: auto; min-height: 100vh; }
+        .preview-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 32px 26px; width: 100%; max-width: 440px; box-shadow: var(--glow2); animation: modalIn 0.35s ease; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
         .preview-icon { font-size: 64px; filter: drop-shadow(0 0 16px var(--primary)); }
         .preview-name { font-size: 24px; font-weight: 900; color: var(--text); line-height: 1.2; }
-        .preview-stats-row {
-          display: flex; gap: 12px; width: 100%;
-        }
-        .preview-stat {
-          flex: 1; background: var(--bg3); border: 1px solid var(--border);
-          border-radius: 14px; padding: 14px 8px; text-align: center;
-        }
+        .preview-stats-row { display: flex; gap: 12px; width: 100%; }
+        .preview-stat { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 14px 8px; text-align: center; }
         .preview-stat-num { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: var(--primary); }
         .preview-stat-lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
-        .preview-start-btn {
-          width: 100%; padding: 18px;
-          background: linear-gradient(135deg, var(--primary), var(--accent));
-          border: none; border-radius: 16px;
-          color: #000; font-family: 'Exo 2', sans-serif;
-          font-size: 18px; font-weight: 900;
-          cursor: pointer; letter-spacing: 0.5px;
-          box-shadow: 0 6px 28px rgba(0,229,255,0.45);
-          transition: transform 0.15s, box-shadow 0.15s;
-        }
+        .preview-start-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; border-radius: 16px; color: #000; font-family: 'Exo 2', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; letter-spacing: 0.5px; box-shadow: 0 6px 28px rgba(0,229,255,0.45); transition: transform 0.15s, box-shadow 0.15s; }
         .preview-start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,229,255,0.55); }
         .preview-start-btn:active { transform: scale(0.98); }
-        .preview-back-btn {
-          background: transparent; border: 2px solid var(--border);
-          color: var(--text2); border-radius: 12px;
-          padding: 11px 24px; font-family: 'Exo 2', sans-serif;
-          font-size: 14px; font-weight: 600; cursor: pointer;
-          transition: border-color 0.2s, color 0.2s;
-        }
+        .preview-back-btn { background: transparent; border: 2px solid var(--border); color: var(--text2); border-radius: 12px; padding: 11px 24px; font-family: 'Exo 2', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
         .preview-back-btn:hover { border-color: var(--primary); color: var(--primary); }
     </style>
 </head>
 <body>
 
 
-<!-- DESKTOP NAVBAR (yalnız kompüterdə görünür) -->
+<!-- DESKTOP NAVBAR -->
 <nav class="desktop-navbar" id="desktopNavbar">
   <div class="nav-logo" onclick="showScreen('homeScreen');navCloseAll()">📚 azeduu.github.io</div>
-  <div class="nav-items" id="navCatItems">
-    <!-- Kateqoriyalar dinamik yüklənir -->
-  </div>
+  <div class="nav-items" id="navCatItems"></div>
   <div class="nav-right" id="navRight">
     <div class="nav-dropdown" id="navDropElan">
       <button class="nav-item" onclick="navToggle('navDropElan')">📣 Elanlar ▾</button>
@@ -882,13 +661,10 @@
 
 <!-- HOME -->
 <div id="homeScreen" class="screen active">
-    <!-- Hamburger -->
     <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Menü">&#9776;</button>
 
-    <!-- Side Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
-    <!-- Side Menu -->
     <div class="side-menu" id="sideMenu">
         <div class="side-menu-header" style="display:flex;align-items:center;justify-content:space-between;">
             <span>Parametrlər</span>
@@ -903,18 +679,16 @@
             <span id="soundLabel">Səs Açıq</span>
         </div>
         <div class="side-menu-divider"></div>
-        <div id="sideMenuCategories"><!-- Kateqoriyalar dinamik yüklənir --></div>
+        <div id="sideMenuCategories"></div>
         <div class="side-menu-divider"></div>
-        <div class="side-menu-elanlar" id="sideMenuElanlar">
-            <!-- Elanlar buraya dinamik yüklənir -->
-        </div>
+        <div class="side-menu-elanlar" id="sideMenuElanlar"></div>
     </div>
+
     <div class="logo-wrap">
         <div class="super-sinaq-title" onclick="handleLogoTap()" id="logoIcon">azeduu.github.io</div>
         <div class="logo-sub">Test Platforması</div>
     </div>
 
-    <!-- Kateqoriya düymələri (desktop-da navbar-da, mobil-də burda) -->
     <div id="homeCatButtons" style="display:none;width:100%;max-width:900px;flex-wrap:wrap;gap:8px;justify-content:center;"></div>
 
     <div class="quiz-list-home" id="quizListHome">
@@ -1056,7 +830,6 @@
         <div class="tab-panel active" id="tab-quizzes">
             <div class="section-head">Mövcud Testlər</div>
             <div id="quizMgrList"><div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Yüklənir...</div></div>
-
             <div class="section-head" style="margin-top:6px;">Yeni Test Yarat</div>
             <div class="input-group">
                 <label>Test Adı</label>
@@ -1075,7 +848,6 @@
         <div class="tab-panel" id="tab-categories">
             <div class="section-head">Mövcud Kateqoriyalar</div>
             <div id="catMgrList"><div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Yüklənir...</div></div>
-
             <div class="section-head" style="margin-top:6px;">Yeni Kateqoriya Yarat</div>
             <div class="input-group">
                 <label>Kateqoriya Adı</label>
@@ -1088,19 +860,14 @@
                 </div>
                 <button class="btn btn-success btn-icon" style="flex:2;" onclick="createCategory()">➕ Kateqoriya Yarat</button>
             </div>
-
             <div class="section-head" style="margin-top:6px;">Kateqoriyaya Test Əlavə Et</div>
             <div class="input-group">
                 <label>Kateqoriya Seç</label>
-                <select class="input-field" id="catAssignCatSelect">
-                    <option value="">-- Kateqoriya seçin --</option>
-                </select>
+                <select class="input-field" id="catAssignCatSelect"><option value="">-- Kateqoriya seçin --</option></select>
             </div>
             <div class="input-group">
                 <label>Test Seç</label>
-                <select class="input-field" id="catAssignQuizSelect">
-                    <option value="">-- Test seçin --</option>
-                </select>
+                <select class="input-field" id="catAssignQuizSelect"><option value="">-- Test seçin --</option></select>
             </div>
             <button class="btn btn-primary btn-icon" onclick="assignQuizToCategory()">🔗 Testə Kateqoriya Təyin Et</button>
         </div>
@@ -1113,9 +880,7 @@
                     <option value="">-- Test seçin --</option>
                 </select>
             </div>
-
             <div id="noQuizSelectedMsg" style="text-align:center;padding:32px;color:var(--text2);font-size:13px;">Yuxarıdan test seçin</div>
-
             <div id="questionPanel" style="display:none;flex-direction:column;gap:12px;">
                 <div class="section-head" id="qFormTitle">Sual Əlavə Et</div>
                 <div id="editModeNote" style="display:none;">
@@ -1128,37 +893,29 @@
                     <label>Sual mətni</label>
                     <textarea class="input-field" id="qTextInput" placeholder="Sualı buraya yazın..."></textarea>
                 </div>
-
-                <!-- ŞƏKİL BÖLÜMÜ -->
                 <div class="input-group">
                     <label>🖼 Sual şəkli (istəyə bağlı)</label>
                     <div style="display:flex;flex-direction:column;gap:8px;">
-                        <!-- Tab seçim -->
                         <div style="display:flex;gap:6px;">
                             <button type="button" id="imgTabUpload" class="btn btn-sm btn-primary" onclick="switchImgTab('upload')" style="flex:1;">📁 Yüklə</button>
                             <button type="button" id="imgTabLink" class="btn btn-sm btn-outline" onclick="switchImgTab('link')" style="flex:1;">🔗 Link</button>
                         </div>
-                        <!-- Upload paneli -->
                         <div id="imgPanelUpload">
                             <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border:2px dashed var(--border);border-radius:12px;cursor:pointer;background:var(--bg2);font-size:13px;color:var(--text2);">
                                 <span id="imgUploadLabel">📂 Şəkil seçin (JPG/PNG)</span>
                                 <input type="file" id="qImgFile" accept="image/*" style="display:none;" onchange="onImgFileChange(this)">
                             </label>
                         </div>
-                        <!-- Link paneli -->
                         <div id="imgPanelLink" style="display:none;">
                             <input type="text" class="input-field" id="qImgLink" placeholder="Google Drive və ya birbaşa şəkil linki..." oninput="onImgLinkChange(this.value)">
                             <div style="font-size:11px;color:var(--text2);margin-top:4px;">Google Drive: Faylı paylaş → &quot;İstənilən şəxs&quot; → linki yapışdır</div>
                         </div>
-                        <!-- Preview -->
                         <div id="imgPreviewWrap" style="display:none;position:relative;">
                             <img id="imgPreview" src="" style="width:100%;max-height:180px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:var(--bg2);">
                             <button type="button" onclick="clearImgField()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);border:none;color:white;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:14px;line-height:1;">✕</button>
                         </div>
                     </div>
                 </div>
-                <!-- /ŞƏKİL BÖLÜMÜ -->
-
                 <div class="input-group">
                     <label>Variantlar (✓ düzgün cavabı seçin)</label>
                     <div class="options-inputs" id="optInputs"></div>
@@ -1190,26 +947,11 @@
             </div>
             <div id="noQuizSettingsMsg" style="text-align:center;padding:32px;color:var(--text2);font-size:13px;">Test seçin</div>
             <div id="settingsPanel" style="display:none;flex-direction:column;gap:0;">
-                <div class="setting-row">
-                    <label>⏱ Test vaxtı (dəqiqə)</label>
-                    <input type="number" class="time-input" id="setTimeLimit" value="30" min="1" max="180">
-                </div>
-                <div class="setting-row">
-                    <label>🔀 Sualları qarışdır</label>
-                    <label class="toggle"><input type="checkbox" id="setShuffleQ" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="setting-row">
-                    <label>🔀 Cavabları qarışdır</label>
-                    <label class="toggle"><input type="checkbox" id="setShuffleA" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="setting-row">
-                    <label>🔊 Səs effektləri</label>
-                    <label class="toggle"><input type="checkbox" id="setSound" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="setting-row">
-                    <label>🔢 Sual sayı (0 = hamısı)</label>
-                    <input type="number" class="time-input" id="setQLimit" value="0" min="0" max="999" style="width:70px;">
-                </div>
+                <div class="setting-row"><label>⏱ Test vaxtı (dəqiqə)</label><input type="number" class="time-input" id="setTimeLimit" value="30" min="1" max="180"></div>
+                <div class="setting-row"><label>🔀 Sualları qarışdır</label><label class="toggle"><input type="checkbox" id="setShuffleQ" checked><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><label>🔀 Cavabları qarışdır</label><label class="toggle"><input type="checkbox" id="setShuffleA" checked><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><label>🔊 Səs effektləri</label><label class="toggle"><input type="checkbox" id="setSound" checked><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><label>🔢 Sual sayı (0 = hamısı)</label><input type="number" class="time-input" id="setQLimit" value="0" min="0" max="999" style="width:70px;"></div>
                 <button class="btn btn-primary btn-icon" style="margin-top:14px;" onclick="saveQuizSettings()">💾 Parametrləri Saxla</button>
             </div>
         </div>
@@ -1218,9 +960,7 @@
         <div class="tab-panel" id="tab-importExport">
             <div class="input-group">
                 <label>Test Seç</label>
-                <select class="input-field" id="importQuizSelect">
-                    <option value="">-- Test seçin --</option>
-                </select>
+                <select class="input-field" id="importQuizSelect"><option value="">-- Test seçin --</option></select>
             </div>
             <div class="import-box" onclick="document.getElementById('jsonFileInput').click()">
                 <div class="import-icon">📂</div>
@@ -1260,22 +1000,10 @@
         <div class="tab-panel" id="tab-elanlar">
             <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;display:flex;flex-direction:column;gap:12px;">
                 <div class="section-head">Yeni Elan Əlavə Et</div>
-                <div class="input-group">
-                    <label>Başlıq *</label>
-                    <input type="text" class="input-field" id="elanTitle" placeholder="Məs: Yeni Test Əlavə Edildi">
-                </div>
-                <div class="input-group">
-                    <label>Mətn</label>
-                    <textarea class="input-field" id="elanText" placeholder="Elan mətni buraya..." style="min-height:80px;"></textarea>
-                </div>
-                <div class="input-group">
-                    <label>Link (isteğe bağlı)</label>
-                    <input type="text" class="input-field" id="elanLink" placeholder="https://...">
-                </div>
-                <div class="input-group">
-                    <label>Link Mətni</label>
-                    <input type="text" class="input-field" id="elanLinkText" placeholder="Məs: Daha çox oxu">
-                </div>
+                <div class="input-group"><label>Başlıq *</label><input type="text" class="input-field" id="elanTitle" placeholder="Məs: Yeni Test Əlavə Edildi"></div>
+                <div class="input-group"><label>Mətn</label><textarea class="input-field" id="elanText" placeholder="Elan mətni buraya..." style="min-height:80px;"></textarea></div>
+                <div class="input-group"><label>Link (isteğe bağlı)</label><input type="text" class="input-field" id="elanLink" placeholder="https://..."></div>
+                <div class="input-group"><label>Link Mətni</label><input type="text" class="input-field" id="elanLinkText" placeholder="Məs: Daha çox oxu"></div>
                 <button class="btn btn-success btn-icon" onclick="saveElan()">➕ Elan Əlavə Et</button>
             </div>
             <div class="section-head" style="margin-top:4px;">Mövcud Elanlar</div>
@@ -1286,8 +1014,6 @@
         <div class="tab-panel" id="tab-adsConfig">
             <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;display:flex;flex-direction:column;gap:14px;">
                 <div class="section-head">📢 Reklam Ayarları</div>
-
-                <!-- Platforma seçimi -->
                 <div class="input-group">
                     <label>📱 Platforma</label>
                     <select class="input-field" id="adPlatformSelect" onchange="onAdPlatformChange()">
@@ -1295,8 +1021,6 @@
                         <option value="android">📱 Android (Unity Ads)</option>
                     </select>
                 </div>
-
-                <!-- VEB reklam bölməsi -->
                 <div id="webAdSection">
                     <div style="background:var(--bg3);border:1px solid var(--border);border-radius:11px;padding:13px;display:flex;flex-direction:column;gap:10px;">
                         <div class="section-head">🌐 Veb Reklam Şirkəti</div>
@@ -1312,122 +1036,66 @@
                                 <option value="custom">✏️ Özəl Kod</option>
                             </select>
                         </div>
-
-                        <!-- Şirkət məlumatı -->
                         <div id="adProviderInfo" style="font-size:12px;color:var(--text2);padding:10px;background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.15);border-radius:8px;line-height:1.7;display:none;"></div>
-
-                        <!-- Ad Unit / Publisher ID -->
                         <div id="adUnitSection" style="display:none;">
                             <div class="input-group">
                                 <label id="adUnitLabel">Publisher ID / Ad Unit</label>
                                 <input type="text" class="input-field" id="adUnitInput" placeholder="ca-pub-XXXXXXXXXXXXXXXX">
                             </div>
                         </div>
-
-                        <!-- Özəl kod -->
                         <div id="adCustomSection" style="display:none;">
                             <div class="input-group">
                                 <label>Reklam HTML Kodu</label>
                                 <textarea class="input-field" id="adCustomCode" placeholder="<ins class=...> və ya <script>..." style="min-height:100px;font-family:monospace;font-size:12px;"></textarea>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <label>⏱ Keçmə vaxtı (saniyə)</label>
                             <input type="number" class="time-input" id="adSkipAfter" value="5" min="3" max="30" style="width:70px;">
                         </div>
-
                         <button class="btn btn-primary btn-icon" onclick="saveWebAdConfig()">💾 Veb Reklam Saxla</button>
                     </div>
                 </div>
-
                 <div style="font-size:12px;color:var(--text2);line-height:1.6;" id="adPlatformNote">Hansı məqamda reklam göstəriləcəyini seçin:</div>
-
-                <!-- Toggle rows -->
                 <div style="display:flex;flex-direction:column;gap:10px;">
-
                     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
-                        <div>
-                            <div style="font-size:13px;font-weight:700;color:var(--text);">🚀 Test başlayanda (Interstitial)</div>
-                            <div style="font-size:11px;color:var(--text2);margin-top:2px;">Hər test başlamazdan əvvəl tam ekran reklam göstər</div>
-                        </div>
-                        <label class="ads-toggle">
-                            <input type="checkbox" id="adToggleStartQuiz" onchange="saveAdSettings()">
-                            <span class="ads-slider"></span>
-                        </label>
+                        <div><div style="font-size:13px;font-weight:700;color:var(--text);">🚀 Test başlayanda (Interstitial)</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">Hər test başlamazdan əvvəl tam ekran reklam göstər</div></div>
+                        <label class="ads-toggle"><input type="checkbox" id="adToggleStartQuiz" onchange="saveAdSettings()"><span class="ads-slider"></span></label>
                     </div>
-
                     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
-                        <div>
-                            <div style="font-size:13px;font-weight:700;color:var(--text);">🏁 Test bitəndə (Interstitial)</div>
-                            <div style="font-size:11px;color:var(--text2);margin-top:2px;">Test bitdikdən sonra nəticə ekranından əvvəl reklam göstər</div>
-                        </div>
-                        <label class="ads-toggle">
-                            <input type="checkbox" id="adToggleFinishQuiz" onchange="saveAdSettings()">
-                            <span class="ads-slider"></span>
-                        </label>
+                        <div><div style="font-size:13px;font-weight:700;color:var(--text);">🏁 Test bitəndə (Interstitial)</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">Test bitdikdən sonra nəticə ekranından əvvəl reklam göstər</div></div>
+                        <label class="ads-toggle"><input type="checkbox" id="adToggleFinishQuiz" onchange="saveAdSettings()"><span class="ads-slider"></span></label>
                     </div>
-
                     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
-                        <div>
-                            <div style="font-size:13px;font-weight:700;color:var(--text);">🏠 Ana səhifəyə qayıdanda (Interstitial)</div>
-                            <div style="font-size:11px;color:var(--text2);margin-top:2px;">Nəticə ekranından ana səhifəyə gedəndə reklam göstər</div>
-                        </div>
-                        <label class="ads-toggle">
-                            <input type="checkbox" id="adToggleGoHome" onchange="saveAdSettings()">
-                            <span class="ads-slider"></span>
-                        </label>
+                        <div><div style="font-size:13px;font-weight:700;color:var(--text);">🏠 Ana səhifəyə qayıdanda (Interstitial)</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">Nəticə ekranından ana səhifəyə gedəndə reklam göstər</div></div>
+                        <label class="ads-toggle"><input type="checkbox" id="adToggleGoHome" onchange="saveAdSettings()"><span class="ads-slider"></span></label>
                     </div>
-
                     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
-                        <div>
-                            <div style="font-size:13px;font-weight:700;color:var(--text);">🔁 Testi yenidən başladanda (Interstitial)</div>
-                            <div style="font-size:11px;color:var(--text2);margin-top:2px;">Restart düyməsinə basıldıqda reklam göstər</div>
-                        </div>
-                        <label class="ads-toggle">
-                            <input type="checkbox" id="adToggleRestart" onchange="saveAdSettings()">
-                            <span class="ads-slider"></span>
-                        </label>
+                        <div><div style="font-size:13px;font-weight:700;color:var(--text);">🔁 Testi yenidən başladanda (Interstitial)</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">Restart düyməsinə basıldıqda reklam göstər</div></div>
+                        <label class="ads-toggle"><input type="checkbox" id="adToggleRestart" onchange="saveAdSettings()"><span class="ads-slider"></span></label>
                     </div>
-
                 </div>
-
                 <div style="padding:10px;background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:8px;font-size:12px;color:var(--text2);" id="adPlatformWarning">
                     ⚠️ Veb reklamı üçün seçdiyiniz şirkətin saytında qeydiyyatdan keçin və kod alın.
                 </div>
             </div>
         </div>
 
-        <!-- TAB: USERS (İSTİFADƏÇİLƏR) -->
+        <!-- TAB: USERS -->
         <div class="tab-panel" id="tab-users">
             <div style="background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:11px;padding:11px 13px;font-size:13px;color:var(--text2);line-height:1.6;">
                 📱 Tətbiqi yükləmiş unikal cihazların sayı Firebase-dən real vaxtda göstərilir.
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px;">
-                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;">
-                    <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">📲 Ümumi Yükləmə</div>
-                    <div id="usersTotal" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--primary);">—</div>
-                </div>
-                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;">
-                    <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">🗓 Bu gün</div>
-                    <div id="usersToday" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--success);">—</div>
-                </div>
-                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;">
-                    <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">📅 Bu həftə</div>
-                    <div id="usersWeek" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--warning);">—</div>
-                </div>
-                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;">
-                    <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">📆 Bu ay</div>
-                    <div id="usersMonth" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--error);">—</div>
-                </div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">📲 Ümumi Yükləmə</div><div id="usersTotal" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--primary);">—</div></div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">🗓 Bu gün</div><div id="usersToday" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--success);">—</div></div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">📅 Bu həftə</div><div id="usersWeek" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--warning);">—</div></div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center;"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">📆 Bu ay</div><div id="usersMonth" style="font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--error);">—</div></div>
             </div>
             <div class="section-head" style="margin-top:4px;">Son Yükləmələr</div>
-            <div id="usersRecentList" style="background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;">
-                <div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Yüklənir...</div>
-            </div>
+            <div id="usersRecentList" style="background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;"><div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Yüklənir...</div></div>
             <button class="btn btn-outline btn-icon" style="margin-top:4px;" onclick="loadUsersTab()">🔄 Yenilə</button>
         </div>
-
     </div>
 </div>
 
@@ -1448,14 +1116,8 @@
     <div class="modal">
         <h2>✏️ Kateqoriyanı Redaktə Et</h2>
         <input type="hidden" id="editCatId">
-        <div class="input-group" style="margin-bottom:12px;">
-            <label>Kateqoriya Adı</label>
-            <input type="text" class="input-field" id="editCatName" placeholder="Kateqoriya adı">
-        </div>
-        <div class="input-group" style="margin-bottom:18px;">
-            <label>İkon (emoji)</label>
-            <input type="text" class="input-field" id="editCatIcon" placeholder="📁" maxlength="2">
-        </div>
+        <div class="input-group" style="margin-bottom:12px;"><label>Kateqoriya Adı</label><input type="text" class="input-field" id="editCatName" placeholder="Kateqoriya adı"></div>
+        <div class="input-group" style="margin-bottom:18px;"><label>İkon (emoji)</label><input type="text" class="input-field" id="editCatIcon" placeholder="📁" maxlength="2"></div>
         <div style="display:flex;gap:10px;">
             <button class="btn btn-success" style="flex:1;" onclick="saveEditCategory()">💾 Saxla</button>
             <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('editCatModal').classList.remove('active')">Ləğv et</button>
@@ -1464,9 +1126,6 @@
 </div>
 
 <script>
-    // ================================================================
-    //  STATE
-    // ================================================================
     let quizzes      = {};
     let categories    = {};
     let currentQuizId = null;
@@ -1478,7 +1137,7 @@
     let secondsLeft   = 0;
     let editingQId    = null;
     let adminQuestions = [];
-    let _globalSoundOn = true; // hamburger səs toggle
+    let _globalSoundOn = true;
 
     const DEFAULT_SETTINGS = { timeLimit: 30, shuffleQ: true, shuffleA: true, sound: true, qLimit: 0 };
 
@@ -1496,9 +1155,6 @@
       } catch(e) { console.warn('setAdminPass error:', e); }
     }
 
-    // ================================================================
-    //  AUDIO
-    // ================================================================
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     function getAudioCtx() { if (!audioCtx) audioCtx = new AudioCtx(); return audioCtx; }
@@ -1538,17 +1194,12 @@
       tick()    { if(isSoundOn()) playTone(1200,'square',0.04,0.15); },
     };
 
-    // ================================================================
-    //  SCREENS
-    // ================================================================
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       navCloseAll();
-      // Admin paneldə navbar gizlət
       const navbar = document.getElementById('desktopNavbar');
       if (navbar) navbar.style.display = (id === 'adminScreen') ? 'none' : '';
-      // Quiz ekranında kateqoriya və elanlar gizlənsin
       const inQuiz = (id === 'quizScreen');
       const navCatItems = document.getElementById('navCatItems');
       const navRight    = document.getElementById('navRight');
@@ -1556,9 +1207,6 @@
       if (navRight)    navRight.style.display    = inQuiz ? 'none' : '';
     }
 
-    // ================================================================
-    //  TOAST / CONFIRM
-    // ================================================================
     function toast(msg, type='info') {
       const colors = {info:'var(--primary)',error:'var(--error)',warning:'var(--warning)',success:'var(--success)'};
       const el = document.createElement('div');
@@ -1579,9 +1227,6 @@
     }
     function closeConfirm() { document.getElementById('confirmModal').classList.remove('active'); }
 
-    // ================================================================
-    //  FIREBASE
-    // ================================================================
     function fbReady() { return !!window._fbReady; }
 
     function updateFbStatus(ok, msg) {
@@ -1613,9 +1258,6 @@
       window._fbOnValue(window._fbRef(window._fbDb, path), cb, errCb||console.error);
     }
 
-    // ================================================================
-    //  INIT
-    // ================================================================
     window.appInit = function() {
       updateFbStatus(null, 'Qoşulur...');
       registerInstall();
@@ -1624,7 +1266,6 @@
         quizzes = snapshot.val() || {};
         updateFbStatus(true, 'Qoşuldu');
         renderHomeQuizList();
-
         refreshAdminQuizSelects();
         renderQuizMgrList();
         const selQid = document.getElementById('adminQuizSelect') && document.getElementById('adminQuizSelect').value;
@@ -1635,7 +1276,6 @@
         console.error(err);
       });
 
-      // Kateqoriyaları dinlə
       fbListen('categories', (snapshot) => {
         categories = snapshot.val() || {};
         renderSideMenuCategories();
@@ -1643,7 +1283,6 @@
         refreshCatSelects();
       });
 
-      // Elanları dinlə
       fbListen('elanlar', (snapshot) => {
         const data = snapshot.val() || {};
         renderSideMenuElanlar(data);
@@ -1651,16 +1290,10 @@
       });
     };
 
-    // ================================================================
-    //  HOME
-    // ================================================================
     function renderHomeQuizList() {
       const container = document.getElementById('quizListHome');
       const ids = Object.keys(quizzes);
-      // Köhnə "bütün testlər" siyahısını gizlət — yalnız son 10 göstərilir
       container.style.display = 'none';
-
-      // Son 10 test
       renderLast10Tests(ids);
     }
 
@@ -1668,14 +1301,11 @@
       const sec = document.getElementById('last10Section');
       const listEl = document.getElementById('last10List');
       if (!sec || !listEl) return;
-
       if (!ids.length) {
         sec.style.display = 'flex';
         listEl.innerHTML = '<div class="no-quizzes">Hələ test yaradılmayıb.<br>Köhnə testlər isə menyudakı kateqoriyalardan tapıla bilər.</div>';
         return;
       }
-
-      // Son 10: ən yeni yuxarıda
       const last10 = [...ids].reverse().slice(0, 10);
       sec.style.display = 'flex';
       listEl.innerHTML = last10.map(id => {
@@ -1694,10 +1324,6 @@
       }).join('');
     }
 
-
-    // ================================================================
-    //  HIDDEN ADMIN (7x logo tap)
-    // ================================================================
     let logoTapCount = 0, logoTapTimer = null;
     function handleLogoTap() {
       logoTapCount++;
@@ -1707,9 +1333,6 @@
       logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
     }
 
-    // ================================================================
-    //  ADMIN AUTH
-    // ================================================================
     function openAdminLogin() {
       document.getElementById('adminLogin').classList.add('active');
       document.getElementById('adminPassInput').value = '';
@@ -1730,9 +1353,6 @@
       }
     }
 
-    // ================================================================
-    //  ADMIN PANEL
-    // ================================================================
     function initAdminPanel() {
       switchTab('quizzes');
       loadAdSettingsUI();
@@ -1751,7 +1371,6 @@
       if (tabId === 'users') loadUsersTab();
     }
 
-    // --- Quiz Manager ---
     async function createQuiz() {
       const name = document.getElementById('newQuizName').value.trim();
       const icon = document.getElementById('newQuizIcon').value.trim() || '📝';
@@ -1809,7 +1428,6 @@
       toast('Yeniləndi ✓');
     }
 
-    // --- Refresh Selects ---
     function refreshAdminQuizSelects() {
       const ids = Object.keys(quizzes);
       const opts = ids.map(id => `<option value="${id}">${quizzes[id].name}</option>`).join('');
@@ -1822,7 +1440,6 @@
       });
     }
 
-    // --- Questions Tab ---
     function onAdminQuizChange() {
       const qid = document.getElementById('adminQuizSelect').value;
       document.getElementById('questionPanel').style.display = qid ? 'flex' : 'none';
@@ -1854,11 +1471,9 @@
       }
       const correct = parseInt((document.querySelector('input[name="correctOpt"]:checked')||{}).value||0);
 
-      // Şəkil URL-ni al (upload və ya link)
       let imageUrl = window._pendingImgUrl || '';
       const fileInput = document.getElementById('qImgFile');
       if (fileInput && fileInput.files && fileInput.files[0]) {
-        // Şəkili resize edib base64-ə çevir (max 800px, keyfiyyət 0.7)
         imageUrl = await new Promise((resolve) => {
           const file = fileInput.files[0];
           const reader = new FileReader();
@@ -1913,7 +1528,6 @@
       document.getElementById('qTextInput').value = q.question;
       q.options.forEach((o,i)=>{const el=document.getElementById(`opt${i}`);if(el)el.value=o;});
       document.querySelectorAll('input[name="correctOpt"]').forEach((r,i)=>r.checked=(i===q.correct));
-      // Şəkli yüklə
       clearImgField();
       if (q.imageUrl) {
         window._pendingImgUrl = q.imageUrl;
@@ -1929,10 +1543,6 @@
       switchTab('questions');
     }
 
-
-    // ================================================================
-    //  IMAGE UPLOAD / LINK HELPERS
-    // ================================================================
     window._pendingImgUrl = '';
 
     function switchImgTab(tab) {
@@ -1955,10 +1565,9 @@
     function onImgFileChange(input) {
       const file = input.files && input.files[0];
       if (!file) return;
-      window._pendingImgUrl = ''; // file upload istifadə ediləcək
+      window._pendingImgUrl = '';
       const label = document.getElementById('imgUploadLabel');
       if (label) label.textContent = '✅ ' + file.name;
-      // Preview üçün local URL
       const reader = new FileReader();
       reader.onload = (e) => {
         const prev = document.getElementById('imgPreviewWrap');
@@ -1968,15 +1577,12 @@
       reader.readAsDataURL(file);
     }
 
-    // Google Drive linkini birbaşa şəkil URL-nə çevir
     function normalizeDriveUrl(url) {
-      // Format: https://drive.google.com/file/d/FILE_ID/view?...
       const m = url.match(/\/file\/d\/([^/]+)/);
       if (m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
-      // Format: https://drive.google.com/open?id=FILE_ID
       const m2 = url.match(/[?&]id=([^&]+)/);
       if (m2) return `https://drive.google.com/uc?export=view&id=${m2[1]}`;
-      return url; // birbaşa link - olduğu kimi istifadə et
+      return url;
     }
 
     function onImgLinkChange(val) {
@@ -2055,7 +1661,6 @@
       });
     }
 
-    // --- Settings Tab ---
     function loadSettingsForQuiz() {
       const qid = document.getElementById('settingsQuizSelect').value;
       document.getElementById('settingsPanel').style.display = qid ? 'flex' : 'none';
@@ -2086,7 +1691,6 @@
       } catch(e) { toast('Xəta: '+e.message,'error'); }
     }
 
-    // --- Import/Export ---
     function importJSON(event) {
       const qid = document.getElementById('importQuizSelect').value;
       if (!qid) { toast('Əvvəlcə test seçin!','error'); return; }
@@ -2121,7 +1725,6 @@
       URL.revokeObjectURL(url); toast('Export edildi ✓');
     }
 
-    // --- Admin Config ---
     async function changeAdminPass() {
       const old=document.getElementById('adminOldPass').value;
       const n1=document.getElementById('adminNewPass').value;
@@ -2137,13 +1740,10 @@
     function confirmResetStats() {
       showConfirm('Statistikanı Sıfırla?','Nəticə və cəhd məlumatları silinəcək!',()=>{
         localStorage.removeItem('ft_best'); localStorage.removeItem('ft_attempts');
-         SFX.save(); toast('Statistika sıfırlandı ✓');
+        SFX.save(); toast('Statistika sıfırlandı ✓');
       });
     }
 
-    // ================================================================
-    //  QUIZ LOGIC
-    // ================================================================
     function shuffle(arr) {
       const a=[...arr];
       for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
@@ -2158,11 +1758,9 @@
       const rawQs = quizData.questions ? Object.entries(quizData.questions).map(([id,v])=>({id,...v})) : [];
       if (!rawQs.length) { toast('Bu testdə sual yoxdur!','error'); return; }
 
-      // Hangi ekrandan gəldiyini yadda saxla (geri üçün)
       window._previewFrom = fromScreen || (document.querySelector('.screen.active')||{}).id || 'homeScreen';
       _pendingQuizId = qid;
 
-      // Preview ekranını doldur
       const s = quizData.settings || DEFAULT_SETTINGS;
       const qCount = rawQs.length;
       const limited = s.qLimit > 0 ? Math.min(s.qLimit, qCount) : qCount;
@@ -2170,8 +1768,6 @@
       document.getElementById('previewName').textContent    = quizData.name || 'Test';
       document.getElementById('previewQCount').textContent  = limited;
       document.getElementById('previewTime').textContent    = s.timeLimit || 30;
-
-      // Ən yaxşı nəticəni göstər
 
       SFX.click();
       showScreen('quizPreviewScreen');
@@ -2278,15 +1874,11 @@
     function selectOption(origIdx) {
       SFX.select();
       userAnswers[currentIdx] = origIdx;
-      // Tam render etmek evezine yalniz CSS class-lari deyis
       const btns = document.querySelectorAll('.option-btn');
       btns.forEach((btn, di) => {
         const map = optionMaps[currentIdx];
-        if (map[di] === origIdx) {
-          btn.classList.add('selected');
-        } else {
-          btn.classList.remove('selected');
-        }
+        if (map[di] === origIdx) btn.classList.add('selected');
+        else btn.classList.remove('selected');
       });
       updateNavDots();
     }
@@ -2372,11 +1964,6 @@
       return `<div class="review-card ${status}"><div class="review-q-num">SUAL ${idx+1}</div><div class="review-q-text">${q.question}</div><div class="review-answers">${ansHTML}</div></div>`;
     }
 
-
-    // ================================================================
-    //  GO HOME WITH AD
-    // ================================================================
-
     async function goHomeWithAd() {
       const adS = await getAdSettings();
       if (adS.goHome) {
@@ -2386,18 +1973,10 @@
       }
     }
 
-    // ================================================================
-    //  ADS (Unity Ads) — TAM YENİDƏN YAZILMIŞ
-    //  Mexanizm: Java reklam bitdikdə window.onAdFinished() çağırır
-    //  HTML tərəfi bu callback-i gözləyir
-    // ================================================================
     const AD_SETTINGS_KEY = 'ft_ad_settings';
-
-    // Gözləyən callback — Java tərəfindən çağırılacaq
     let _adPendingCallback = null;
     let _adCallbackTimer   = null;
 
-    // ✅ Bu funksiya Java-dan çağırılır: webView.evaluateJavascript("onAdFinished(true)", null)
     window.onAdFinished = function(success) {
       clearTimeout(_adCallbackTimer);
       const cb = _adPendingCallback;
@@ -2405,14 +1984,11 @@
       if (cb) cb();
     };
 
-    // Yaddaşda saxlanan ad ayarları (Firebase yüklənənə qədər default)
     let _cachedAdSettings = null;
 
     async function getAdSettings() {
-      // Artıq yüklənibsə cache-dən qaytar
       if (_cachedAdSettings) return _cachedAdSettings;
       try {
-        // Firebase-dən oxu (bütün cihazlarda eyni ayar)
         if (fbReady()) {
           const snap = await window._fbGet(window._fbRef(window._fbDb, 'config/adSettings'));
           const val = snap.val();
@@ -2422,54 +1998,19 @@
           }
         }
       } catch(e) {}
-      // Firebase-də yoxdursa — DEFAULT: bütün reklamlar AÇIQ
       const def = { startQuiz: true, finishQuiz: true, goHome: true, restart: true };
       _cachedAdSettings = def;
       return def;
     }
 
-
-    // ================================================================
-    //  WEB AD CONFIG
-    // ================================================================
     const AD_PROVIDERS = {
-      adsense: {
-        name: 'Google AdSense',
-        info: '✅ Ən populyar reklam şəbəkəsi. Google tərəfindən idarə olunur. Aylıq 100+ ziyarətçi lazımdır. <a href="https://adsense.google.com" target="_blank" style="color:var(--primary)">adsense.google.com</a>',
-        label: 'Publisher ID (ca-pub-XXXX)',
-        placeholder: 'ca-pub-1234567890123456',
-        scriptUrl: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
-      },
-      admanager: {
-        name: 'Google Ad Manager',
-        info: '✅ Böyük saytlar üçün. Çoxlu reklam mənbəyi idarəsi. <a href="https://admanager.google.com" target="_blank" style="color:var(--primary)">admanager.google.com</a>',
-        label: 'Network Code',
-        placeholder: '12345678'
-      },
-      ezoic: {
-        name: 'Ezoic',
-        info: '✅ AI əsaslı optimallaşdırma. Kiçik saytlar üçün əla seçim. Aylıq 10.000+ ziyarətçi lazımdır. <a href="https://ezoic.com" target="_blank" style="color:var(--primary)">ezoic.com</a>',
-        label: 'Site ID',
-        placeholder: '12345'
-      },
-      medianet: {
-        name: 'Media.net',
-        info: '✅ Bing/Yahoo reklam şəbəkəsi. İngilis dilli trafik üçün yaxşı. <a href="https://media.net" target="_blank" style="color:var(--primary)">media.net</a>',
-        label: 'Site ID',
-        placeholder: 'XXXXXXXX'
-      },
-      propeller: {
-        name: 'PropellerAds',
-        info: '✅ Banner + PopUnder reklamları. Aşağı trafik tələbi. <a href="https://propellerads.com" target="_blank" style="color:var(--primary)">propellerads.com</a>',
-        label: 'Zone ID',
-        placeholder: '1234567'
-      },
-      custom: {
-        name: 'Özəl Kod',
-        info: '✏️ İstənilən reklam şirkətinin HTML kodunu birbaşa yapışdırın.',
-        label: null
-      },
-      none: { name: 'Yoxdur', info: null, label: null }
+      adsense:   { name:'Google AdSense', info:'✅ Ən populyar reklam şəbəkəsi. <a href="https://adsense.google.com" target="_blank" style="color:var(--primary)">adsense.google.com</a>', label:'Publisher ID (ca-pub-XXXX)', placeholder:'ca-pub-1234567890123456' },
+      admanager: { name:'Google Ad Manager', info:'✅ Böyük saytlar üçün. <a href="https://admanager.google.com" target="_blank" style="color:var(--primary)">admanager.google.com</a>', label:'Network Code', placeholder:'12345678' },
+      ezoic:     { name:'Ezoic', info:'✅ AI əsaslı optimallaşdırma. <a href="https://ezoic.com" target="_blank" style="color:var(--primary)">ezoic.com</a>', label:'Site ID', placeholder:'12345' },
+      medianet:  { name:'Media.net', info:'✅ Bing/Yahoo reklam şəbəkəsi. <a href="https://media.net" target="_blank" style="color:var(--primary)">media.net</a>', label:'Site ID', placeholder:'XXXXXXXX' },
+      propeller: { name:'PropellerAds', info:'✅ Banner + PopUnder reklamları. <a href="https://propellerads.com" target="_blank" style="color:var(--primary)">propellerads.com</a>', label:'Zone ID', placeholder:'1234567' },
+      custom:    { name:'Özəl Kod', info:'✏️ İstənilən reklam şirkətinin HTML kodunu birbaşa yapışdırın.', label:null },
+      none:      { name:'Yoxdur', info:null, label:null }
     };
 
     window._webAdConfig = { enabled: false, provider: 'none', adCode: '', skipAfter: 5 };
@@ -2479,15 +2020,11 @@
         if (!fbReady()) return;
         const snap = await window._fbGet(window._fbRef(window._fbDb, 'config/webAd'));
         const val = snap.val();
-        if (val) {
-          window._webAdConfig = val;
-          applyWebAdConfig(val);
-        }
+        if (val) { window._webAdConfig = val; applyWebAdConfig(val); }
       } catch(e) {}
     }
 
     function applyWebAdConfig(cfg) {
-      // AdSense script yüklə
       if (cfg.provider === 'adsense' && cfg.adUnitId && cfg.enabled) {
         if (!document.querySelector('script[data-ad-provider="adsense"]')) {
           const s = document.createElement('script');
@@ -2503,12 +2040,8 @@
     function onAdPlatformChange() {
       const p = document.getElementById('adPlatformSelect').value;
       document.getElementById('webAdSection').style.display = p === 'web' ? 'block' : 'none';
-      document.getElementById('adPlatformNote').textContent = p === 'web'
-        ? 'Hansı məqamda veb reklam göstəriləcəyini seçin:'
-        : 'Unity Ads Android tətbiqində avtomatik işləyir:';
-      document.getElementById('adPlatformWarning').textContent = p === 'web'
-        ? '⚠️ Veb reklamı üçün seçdiyiniz şirkətin saytında qeydiyyatdan keçin və kod alın.'
-        : '⚠️ Reklam yalnız Unity Ads SDK-nın yüklü olduğu Android tətbiqində işləyir.';
+      document.getElementById('adPlatformNote').textContent = p === 'web' ? 'Hansı məqamda veb reklam göstəriləcəyini seçin:' : 'Unity Ads Android tətbiqində avtomatik işləyir:';
+      document.getElementById('adPlatformWarning').textContent = p === 'web' ? '⚠️ Veb reklamı üçün seçdiyiniz şirkətin saytında qeydiyyatdan keçin və kod alın.' : '⚠️ Reklam yalnız Unity Ads SDK-nın yüklü olduğu Android tətbiqində işləyir.';
     }
 
     function onAdProviderChange() {
@@ -2517,23 +2050,11 @@
       const unitSec = document.getElementById('adUnitSection');
       const customSec = document.getElementById('adCustomSection');
       const cfg = AD_PROVIDERS[p] || {};
-
-      if (cfg.info) {
-        info.innerHTML = cfg.info;
-        info.style.display = 'block';
-      } else {
-        info.style.display = 'none';
-      }
-
-      if (p === 'custom') {
-        unitSec.style.display = 'none';
-        customSec.style.display = 'block';
-      } else if (p === 'none') {
-        unitSec.style.display = 'none';
-        customSec.style.display = 'none';
-      } else {
-        unitSec.style.display = 'block';
-        customSec.style.display = 'none';
+      if (cfg.info) { info.innerHTML = cfg.info; info.style.display = 'block'; } else { info.style.display = 'none'; }
+      if (p === 'custom') { unitSec.style.display = 'none'; customSec.style.display = 'block'; }
+      else if (p === 'none') { unitSec.style.display = 'none'; customSec.style.display = 'none'; }
+      else {
+        unitSec.style.display = 'block'; customSec.style.display = 'none';
         if (cfg.label) document.getElementById('adUnitLabel').textContent = cfg.label;
         if (cfg.placeholder) document.getElementById('adUnitInput').placeholder = cfg.placeholder;
       }
@@ -2545,39 +2066,27 @@
       const customCode = document.getElementById('adCustomCode').value.trim();
       const skipAfter = parseInt(document.getElementById('adSkipAfter').value) || 5;
       const enabled = provider !== 'none';
-
       let adCode = '';
-      if (provider === 'adsense' && adUnitId) {
-        adCode = `<ins class="adsbygoogle" style="display:block;width:100%;height:120px;" data-ad-client="${adUnitId}" data-ad-slot="auto" data-ad-format="auto"></ins>`;
-      } else if (provider === 'medianet' && adUnitId) {
-        adCode = `<script type="text/javascript" src="//contextual.media.net/dmedianet.js?cid=${adUnitId}"><\/script>`;
-      } else if (provider === 'propeller' && adUnitId) {
-        adCode = `<script type="text/javascript" src="//js.dglobalsrv.com/show_ads_v2.js" data-zone="${adUnitId}"><\/script>`;
-      } else if (provider === 'custom') {
-        adCode = customCode;
-      } else if (adUnitId) {
-        adCode = `<!-- ${provider}: ${adUnitId} -->`;
-      }
-
+      if (provider === 'adsense' && adUnitId) adCode = `<ins class="adsbygoogle" style="display:block;width:100%;height:120px;" data-ad-client="${adUnitId}" data-ad-slot="auto" data-ad-format="auto"></ins>`;
+      else if (provider === 'medianet' && adUnitId) adCode = `<script type="text/javascript" src="//contextual.media.net/dmedianet.js?cid=${adUnitId}"><\/script>`;
+      else if (provider === 'propeller' && adUnitId) adCode = `<script type="text/javascript" src="//js.dglobalsrv.com/show_ads_v2.js" data-zone="${adUnitId}"><\/script>`;
+      else if (provider === 'custom') adCode = customCode;
+      else if (adUnitId) adCode = `<!-- ${provider}: ${adUnitId} -->`;
       const cfg = { enabled, provider, adUnitId, adCode, skipAfter };
       try {
         if (fbReady()) {
           await window._fbSet(window._fbRef(window._fbDb, 'config/webAd'), cfg);
-          window._webAdConfig = cfg;
-          applyWebAdConfig(cfg);
+          window._webAdConfig = cfg; applyWebAdConfig(cfg);
           toast('Veb reklam ayarları saxlandı ✓', 'success');
         }
-      } catch(e) {
-        toast('Xəta: ' + e.message, 'error');
-      }
+      } catch(e) { toast('Xəta: ' + e.message, 'error'); }
     }
 
     async function loadWebAdUI() {
       try {
         if (!fbReady()) return;
         const snap = await window._fbGet(window._fbRef(window._fbDb, 'config/webAd'));
-        const cfg = snap.val();
-        if (!cfg) return;
+        const cfg = snap.val(); if (!cfg) return;
         window._webAdConfig = cfg;
         const provSel = document.getElementById('adProviderSelect');
         const unitInp = document.getElementById('adUnitInput');
@@ -2603,12 +2112,8 @@
           await window._fbSet(window._fbRef(window._fbDb, 'config/adSettings'), s);
           _cachedAdSettings = s;
           toast('Reklam ayarları saxlandı ✓', 'success');
-        } else {
-          toast('Firebase hazır deyil!', 'error');
-        }
-      } catch(e) {
-        toast('Xəta: ' + e.message, 'error');
-      }
+        } else { toast('Firebase hazır deyil!', 'error'); }
+      } catch(e) { toast('Xəta: ' + e.message, 'error'); }
     }
 
     async function loadAdSettingsUI() {
@@ -2620,45 +2125,29 @@
       if(el('adToggleRestart'))    el('adToggleRestart').checked    = !!s.restart;
     }
 
-    function tryShowInterstitial(callback) {
-      // Veb mühiti — popup reklam göstər
-      showWebAd(callback);
-    }
+    function tryShowInterstitial(callback) { showWebAd(callback); }
 
     function showWebAd(callback) {
       const adCfg = window._webAdConfig || {};
-      // Reklam söndürülübsə birbaşa davam et
       if (!adCfg.enabled) { if (callback) callback(); return; }
-
       const overlay = document.getElementById('webAdOverlay');
       if (!overlay) { if (callback) callback(); return; }
-
-      // Countdown
       let secs = adCfg.skipAfter || 5;
       const skipBtn  = document.getElementById('webAdSkipBtn');
       const countEl  = document.getElementById('webAdCountdown');
       const adSlot   = document.getElementById('webAdSlot');
-
-      // Reklam slotunu yüklə
       adSlot.innerHTML = adCfg.adCode || '';
       if (window.adsbygoogle && adCfg.provider === 'adsense') {
         try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
       }
-
       skipBtn.style.display = 'none';
       countEl.textContent = secs;
       overlay.style.display = 'flex';
-
       const timer = setInterval(() => {
         secs--;
         countEl.textContent = secs;
-        if (secs <= 0) {
-          clearInterval(timer);
-          skipBtn.style.display = 'block';
-          countEl.textContent = '';
-        }
+        if (secs <= 0) { clearInterval(timer); skipBtn.style.display = 'block'; countEl.textContent = ''; }
       }, 1000);
-
       window._webAdCallback = callback;
       window._webAdTimer = timer;
     }
@@ -2672,18 +2161,13 @@
       if (cb) cb();
     }
 
-
-    // ================================================================
-    //  CATEGORY FUNCTIONS
-    // ================================================================
     async function createCategory() {
       const name = document.getElementById('newCatName').value.trim();
       const icon = document.getElementById('newCatIcon').value.trim() || '📁';
       if (!name) { toast('Kateqoriya adı boş ola bilməz!','error'); return; }
       try {
         await fbPush('categories', { name, icon, quizIds: {} });
-        SFX.save();
-        toast(`"${name}" kateqoriyası yaradıldı ✓`,'success');
+        SFX.save(); toast(`"${name}" kateqoriyası yaradıldı ✓`,'success');
         document.getElementById('newCatName').value = '';
         document.getElementById('newCatIcon').value = '';
       } catch(e) { toast('Xəta: '+e.message,'error'); }
@@ -2701,8 +2185,7 @@
     function editCategory(id) {
       SFX.click();
       const cat = categories[id]; if (!cat) return;
-      const overlay = document.getElementById('editCatModal');
-      if (!overlay) return;
+      const overlay = document.getElementById('editCatModal'); if (!overlay) return;
       document.getElementById('editCatId').value = id;
       document.getElementById('editCatName').value = cat.name || '';
       document.getElementById('editCatIcon').value = cat.icon || '📁';
@@ -2717,8 +2200,7 @@
       try {
         await fbSet('categories/' + id + '/name', name);
         await fbSet('categories/' + id + '/icon', icon);
-        SFX.save();
-        toast('Kateqoriya yeniləndi ✓','success');
+        SFX.save(); toast('Kateqoriya yeniləndi ✓','success');
         document.getElementById('editCatModal').classList.remove('active');
       } catch(e) { toast('Xəta: '+e.message,'error'); }
     }
@@ -2727,11 +2209,8 @@
       const catId = document.getElementById('catAssignCatSelect').value;
       const quizId = document.getElementById('catAssignQuizSelect').value;
       if (!catId || !quizId) { toast('Kateqoriya və test seçin!','error'); return; }
-      // Check if already assigned
       const cat = categories[catId];
-      if (cat && cat.quizIds && cat.quizIds[quizId]) {
-        toast('Bu test artıq bu kateqoriyadadır!','warning'); return;
-      }
+      if (cat && cat.quizIds && cat.quizIds[quizId]) { toast('Bu test artıq bu kateqoriyadadır!','warning'); return; }
       try {
         await fbSet(`categories/${catId}/quizIds/${quizId}`, true);
         toast('Test kateqoriyaya əlavə edildi ✓','success');
@@ -2740,26 +2219,19 @@
 
     async function removeQuizFromCategory(catId, quizId) {
       SFX.click();
-      try {
-        await fbRemove(`categories/${catId}/quizIds/${quizId}`);
-        toast('Test kateqoriyadan çıxarıldı');
-      } catch(e) { toast('Xəta: '+e.message,'error'); }
+      try { await fbRemove(`categories/${catId}/quizIds/${quizId}`); toast('Test kateqoriyadan çıxarıldı'); }
+      catch(e) { toast('Xəta: '+e.message,'error'); }
     }
 
     function renderCatMgrList() {
-      const container = document.getElementById('catMgrList');
-      if (!container) return;
+      const container = document.getElementById('catMgrList'); if (!container) return;
       const ids = Object.keys(categories);
-      if (!ids.length) {
-        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">Kateqoriya yoxdur</div>';
-        return;
-      }
+      if (!ids.length) { container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">Kateqoriya yoxdur</div>'; return; }
       container.innerHTML = ids.map(catId => {
         const cat = categories[catId];
         const qIds = cat.quizIds ? Object.keys(cat.quizIds) : [];
         const quizList = qIds.map(qid => {
-          const q = quizzes[qid];
-          if (!q) return '';
+          const q = quizzes[qid]; if (!q) return '';
           return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;color:var(--text2);">
             <span>${q.icon||'📝'}</span><span style="flex:1;color:var(--text);">${q.name}</span>
             <button class="btn btn-sm btn-danger" onclick="removeQuizFromCategory('${catId}','${qid}')">✕</button>
@@ -2769,10 +2241,7 @@
           <div class="cat-mgr-card" style="flex-direction:column;align-items:stretch;">
             <div style="display:flex;align-items:center;gap:11px;">
               <div class="cat-mgr-icon">${cat.icon||'📁'}</div>
-              <div class="cat-mgr-info">
-                <div class="cat-mgr-name">${cat.name}</div>
-                <div class="cat-mgr-meta">${qIds.length} test</div>
-              </div>
+              <div class="cat-mgr-info"><div class="cat-mgr-name">${cat.name}</div><div class="cat-mgr-meta">${qIds.length} test</div></div>
               <div style="display:flex;gap:6px;">
                 <button class="btn btn-sm btn-outline" onclick="editCategory('${catId}')">✏️</button>
                 <button class="btn btn-sm btn-danger" onclick="deleteCategory('${catId}')">🗑</button>
@@ -2788,52 +2257,38 @@
       const catOpts = catIds.map(id => `<option value="${id}">${categories[id].icon||'📁'} ${categories[id].name}</option>`).join('');
       const quizIds = Object.keys(quizzes);
       const quizOpts = quizIds.map(id => `<option value="${id}">${quizzes[id].icon||'📝'} ${quizzes[id].name}</option>`).join('');
-      const ph1 = '<option value="">-- Kateqoriya seçin --</option>';
-      const ph2 = '<option value="">-- Test seçin --</option>';
       const catSel = document.getElementById('catAssignCatSelect');
       const quizSel = document.getElementById('catAssignQuizSelect');
-      if (catSel) catSel.innerHTML = ph1 + catOpts;
-      if (quizSel) quizSel.innerHTML = ph2 + quizOpts;
+      if (catSel) catSel.innerHTML = '<option value="">-- Kateqoriya seçin --</option>' + catOpts;
+      if (quizSel) quizSel.innerHTML = '<option value="">-- Test seçin --</option>' + quizOpts;
     }
 
     function renderSideMenuCategories() {
-      const container = document.getElementById('sideMenuCategories');
-      if (!container) return;
+      const container = document.getElementById('sideMenuCategories'); if (!container) return;
       const ids = Object.keys(categories);
       if (!ids.length) { container.innerHTML = ''; return; }
       let html = '<div class="cat-section-title">📁 Kateqoriyalar</div>';
       ids.forEach(catId => {
         const cat = categories[catId];
         const qCount = cat.quizIds ? Object.keys(cat.quizIds).length : 0;
-        html += `
-          <div class="cat-menu-item" onclick="openCategoryScreen('${catId}')">
-            <span class="cat-menu-icon">${cat.icon||'📁'}</span>
-            <span>${cat.name}</span>
-            <span class="cat-menu-badge">${qCount}</span>
-          </div>`;
+        html += `<div class="cat-menu-item" onclick="openCategoryScreen('${catId}')"><span class="cat-menu-icon">${cat.icon||'📁'}</span><span>${cat.name}</span><span class="cat-menu-badge">${qCount}</span></div>`;
       });
       container.innerHTML = html;
       updateDesktopNavbar();
     }
 
     function openCategoryScreen(catId) {
-      closeMenu();
-      navCloseAll();
+      closeMenu(); navCloseAll();
       const cat = categories[catId]; if (!cat) return;
       const isDesktop = window.innerWidth >= 768;
-
       if (isDesktop) {
-        // Desktop: ana səhifədə test siyahısını göstər
         const sec = document.getElementById('last10Section');
         const listEl = document.getElementById('last10List');
         const titleEl = document.getElementById('last10Title');
         if (!sec || !listEl) return;
-
-        // Başlığı yenilə
         if (titleEl) titleEl.innerHTML = `
           <span>${cat.icon||'📁'} ${cat.name}</span>
           <button onclick="resetHomeView()" style="background:transparent;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:8px;font-size:11px;cursor:pointer;font-family:'Exo 2',sans-serif;">✕ Bütün testlər</button>`;
-
         const qIds = cat.quizIds ? Object.keys(cat.quizIds) : [];
         if (!qIds.length) {
           sec.style.display = 'flex';
@@ -2844,20 +2299,11 @@
             const q = quizzes[qid]; if (!q) return '';
             const qCount = q.questions ? Object.keys(q.questions).length : 0;
             const s = q.settings || DEFAULT_SETTINGS;
-            return `
-              <div class="quiz-card-home" onclick="startQuiz('${qid}')">
-                <div class="quiz-card-icon">${q.icon||'📝'}</div>
-                <div class="quiz-card-info">
-                  <div class="quiz-card-name">${q.name||'Test'}</div>
-                  <div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div>
-                </div>
-                <div class="quiz-card-arrow">▶</div>
-              </div>`;
+            return `<div class="quiz-card-home" onclick="startQuiz('${qid}')"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">▶</div></div>`;
           }).filter(Boolean).join('');
         }
         showScreen('homeScreen');
       } else {
-        // Mobil: ayrı ekran
         document.getElementById('catScreenTitle').textContent = (cat.icon||'📁') + ' ' + cat.name;
         const body = document.getElementById('catScreenBody');
         const qIds = cat.quizIds ? Object.keys(cat.quizIds) : [];
@@ -2868,15 +2314,7 @@
             const q = quizzes[qid]; if (!q) return '';
             const qCount = q.questions ? Object.keys(q.questions).length : 0;
             const s = q.settings || DEFAULT_SETTINGS;
-            return `
-              <div class="quiz-card-home" onclick="startQuiz('${qid}')">
-                <div class="quiz-card-icon">${q.icon||'📝'}</div>
-                <div class="quiz-card-info">
-                  <div class="quiz-card-name">${q.name||'Test'}</div>
-                  <div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div>
-                </div>
-                <div class="quiz-card-arrow">▶</div>
-              </div>`;
+            return `<div class="quiz-card-home" onclick="startQuiz('${qid}')"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">▶</div></div>`;
           }).filter(Boolean).join('');
         }
         showScreen('categoryScreen');
@@ -2885,35 +2323,21 @@
 
     function resetHomeView() {
       const titleEl = document.getElementById('last10Title');
-      if (titleEl) titleEl.innerHTML = `
-        <span>🕐 Son 10 Test</span>
-        <span style="font-size:10px;color:var(--text2);font-weight:400;letter-spacing:0px;">Köhnələr: ☰ Menyu</span>`;
+      if (titleEl) titleEl.innerHTML = `<span>🕐 Son 10 Test</span><span style="font-size:10px;color:var(--text2);font-weight:400;letter-spacing:0px;">Köhnələr: ☰ Menyu</span>`;
       renderLast10Tests(Object.keys(quizzes));
     }
 
-
-    // ================================================================
-    //  DESKTOP NAVBAR
-    // ================================================================
     function navToggle(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
+      const el = document.getElementById(id); if (!el) return;
       const isOpen = el.classList.contains('open');
       navCloseAll();
       if (!isOpen) el.classList.add('open');
     }
-    function navCloseAll() {
-      document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
-    }
-    // Kənara klikləyəndə bağla
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.nav-dropdown')) navCloseAll();
-    });
+    function navCloseAll() { document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open')); }
+    document.addEventListener('click', (e) => { if (!e.target.closest('.nav-dropdown')) navCloseAll(); });
 
     function updateDesktopNavbar() {
       const ids = Object.keys(categories);
-
-      // Navbar-da hər kateqoriya dropdown kimi — içəridə testlər alt-alta
       const navItems = document.getElementById('navCatItems');
       if (navItems) {
         navItems.innerHTML = ids.map(catId => {
@@ -2925,41 +2349,21 @@
             inner = qIds.map(qid => {
               const q = quizzes[qid]; if (!q) return '';
               const qCount = q.questions ? Object.keys(q.questions).length : 0;
-              return `<div class="nav-dropdown-item" onclick="navCloseAll();startQuiz('${qid}')">
-                <span style="font-size:18px;">${q.icon||'📝'}</span>
-                <span style="flex:1;">
-                  <span style="display:block;font-size:13px;font-weight:700;color:var(--text);">${q.name}</span>
-                  <span style="font-size:11px;color:var(--text2);">${qCount} sual</span>
-                </span>
-              </div>`;
+              return `<div class="nav-dropdown-item" onclick="navCloseAll();startQuiz('${qid}')"><span style="font-size:18px;">${q.icon||'📝'}</span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:700;color:var(--text);">${q.name}</span><span style="font-size:11px;color:var(--text2);">${qCount} sual</span></span></div>`;
             }).filter(Boolean).join('');
-          } else {
-            inner = `<div style="padding:14px 16px;font-size:13px;color:var(--text2);text-align:center;">Test yoxdur</div>`;
-          }
-          // Başlıq sətiri
+          } else { inner = `<div style="padding:14px 16px;font-size:13px;color:var(--text2);text-align:center;">Test yoxdur</div>`; }
           const header = `<div style="padding:10px 14px 8px;font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:2px;border-bottom:1px solid var(--border);">${cat.icon||'📁'} ${cat.name}</div>`;
-          return `<div class="nav-dropdown" id="${dropdownId}">
-            <button class="nav-item" onclick="navToggle('${dropdownId}')" style="color:var(--primary);">
-              ${cat.icon||'📁'} ${cat.name} ▾
-            </button>
-            <div class="nav-dropdown-menu">${header}${inner}</div>
-          </div>`;
+          return `<div class="nav-dropdown" id="${dropdownId}"><button class="nav-item" onclick="navToggle('${dropdownId}')" style="color:var(--primary);">${cat.icon||'📁'} ${cat.name} ▾</button><div class="nav-dropdown-menu">${header}${inner}</div></div>`;
         }).join('');
       }
-
-      // Ana səhifədə kateqoriya düymələri — navbar-da olduğu üçün gizlədilir
       const homeCat = document.getElementById('homeCatButtons');
       if (homeCat) homeCat.style.display = 'none';
     }
 
     function updateDesktopNavElanlar(data) {
-      const menu = document.getElementById('navElanMenu');
-      if (!menu) return;
+      const menu = document.getElementById('navElanMenu'); if (!menu) return;
       const entries = Object.entries(data).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
-      if (!entries.length) {
-        menu.innerHTML = '<div style="padding:14px;font-size:13px;color:var(--text2);text-align:center;">Elan yoxdur</div>';
-        return;
-      }
+      if (!entries.length) { menu.innerHTML = '<div style="padding:14px;font-size:13px;color:var(--text2);text-align:center;">Elan yoxdur</div>'; return; }
       menu.innerHTML = entries.map(([,e]) => `
         <div class="nav-dropdown-elan">
           <div style="font-size:13px;font-weight:700;color:var(--text);">📣 ${e.title}</div>
@@ -2968,9 +2372,6 @@
         </div>`).join('');
     }
 
-    // ================================================================
-    //  HAMBURGER MENU
-    // ================================================================
     function toggleMenu() {
       document.getElementById('sideMenu').classList.toggle('open');
       document.getElementById('menuOverlay').classList.toggle('active');
@@ -2980,19 +2381,9 @@
       document.getElementById('menuOverlay').classList.remove('active');
     }
 
-    // ================================================================
-    //  THEME (Qaranlıq / Ağ rejim)
-    // ================================================================
     function applyTheme(light) {
-      if (light) {
-        document.body.classList.add('light-mode');
-        document.getElementById('themeIcon').textContent = '🌙';
-        document.getElementById('themeLabel').textContent = 'Qaranlıq Rejim';
-      } else {
-        document.body.classList.remove('light-mode');
-        document.getElementById('themeIcon').textContent = '☀️';
-        document.getElementById('themeLabel').textContent = 'Ağ Rejim';
-      }
+      if (light) { document.body.classList.add('light-mode'); document.getElementById('themeIcon').textContent='🌙'; document.getElementById('themeLabel').textContent='Qaranlıq Rejim'; }
+      else { document.body.classList.remove('light-mode'); document.getElementById('themeIcon').textContent='☀️'; document.getElementById('themeLabel').textContent='Ağ Rejim'; }
       const nb = document.getElementById('navThemeBtn');
       if (nb) nb.textContent = light ? '🌙' : '☀️';
     }
@@ -3000,20 +2391,10 @@
       const isLight = document.body.classList.contains('light-mode');
       const newVal = !isLight;
       try { localStorage.setItem('ft_theme', newVal ? 'light' : 'dark'); } catch(e) {}
-      applyTheme(newVal);
-      SFX.click();
+      applyTheme(newVal); SFX.click();
     }
-    // Saxlanılmış tema yüklə
-    (function() {
-      try {
-        const saved = localStorage.getItem('ft_theme');
-        if (saved === 'light') applyTheme(true);
-      } catch(e) {}
-    })();
+    (function() { try { const saved = localStorage.getItem('ft_theme'); if (saved === 'light') applyTheme(true); } catch(e) {} })();
 
-    // ================================================================
-    //  GLOBAL SOUND TOGGLE
-    // ================================================================
     function applySound(on) {
       _globalSoundOn = on;
       document.getElementById('soundIcon').textContent = on ? '🔊' : '🔇';
@@ -3027,18 +2408,8 @@
       applySound(newVal);
       if (newVal) SFX.click();
     }
-    // Saxlanılmış səs yüklə
-    (function() {
-      try {
-        const saved = localStorage.getItem('ft_sound');
-        if (saved === '0') applySound(false);
-      } catch(e) {}
-    })();
+    (function() { try { const saved = localStorage.getItem('ft_sound'); if (saved === '0') applySound(false); } catch(e) {} })();
 
-    // isSoundOn funksiyasını global səs ilə əlaqələndir
-    // ================================================================
-    //  ELANLAR
-    // ================================================================
     async function saveElan() {
       const title = document.getElementById('elanTitle').value.trim();
       if (!title) { toast('Başlıq boş ola bilməz!', 'error'); return; }
@@ -3047,9 +2418,7 @@
       const linkText = document.getElementById('elanLinkText').value.trim() || 'Daha çox';
       const obj = { title, text, link, linkText, createdAt: Date.now() };
       try {
-        await fbPush('elanlar', obj);
-        SFX.save();
-        toast('Elan əlavə edildi ✓', 'success');
+        await fbPush('elanlar', obj); SFX.save(); toast('Elan əlavə edildi ✓', 'success');
         document.getElementById('elanTitle').value = '';
         document.getElementById('elanText').value  = '';
         document.getElementById('elanLink').value  = '';
@@ -3066,32 +2435,21 @@
     }
 
     function renderElanMgrList(data) {
-      const container = document.getElementById('elanMgrList');
-      if (!container) return;
+      const container = document.getElementById('elanMgrList'); if (!container) return;
       const entries = Object.entries(data).sort((a,b) => (b[1].createdAt||0) - (a[1].createdAt||0));
-      if (!entries.length) {
-        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">Elan yoxdur</div>';
-        return;
-      }
+      if (!entries.length) { container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">Elan yoxdur</div>'; return; }
       container.innerHTML = entries.map(([id, e]) => `
         <div class="elan-mgr-card">
-          <div class="elan-mgr-info">
-            <div class="elan-mgr-title">📣 ${e.title}</div>
-            <div class="elan-mgr-meta">${e.text ? e.text.slice(0,60)+(e.text.length>60?'...':'') : '—'} ${e.link ? '· 🔗 link var' : ''}</div>
-          </div>
+          <div class="elan-mgr-info"><div class="elan-mgr-title">📣 ${e.title}</div><div class="elan-mgr-meta">${e.text ? e.text.slice(0,60)+(e.text.length>60?'...':'') : '—'} ${e.link ? '· 🔗 link var' : ''}</div></div>
           <button class="btn btn-sm btn-danger" onclick="deleteElan('${id}')">🗑</button>
         </div>`).join('');
     }
 
     function renderSideMenuElanlar(data) {
       updateDesktopNavElanlar(data);
-      const container = document.getElementById('sideMenuElanlar');
-      if (!container) return;
+      const container = document.getElementById('sideMenuElanlar'); if (!container) return;
       const entries = Object.entries(data).sort((a,b) => (b[1].createdAt||0) - (a[1].createdAt||0));
-      if (!entries.length) {
-        container.innerHTML = '<div class="elan-empty">Elan yoxdur</div>';
-        return;
-      }
+      if (!entries.length) { container.innerHTML = '<div class="elan-empty">Elan yoxdur</div>'; return; }
       container.innerHTML = entries.map(([id, e]) => `
         <div class="elan-item">
           <div class="elan-header" onclick="toggleElan('elan-${id}')">
@@ -3110,28 +2468,12 @@
       const arrow = document.getElementById('arrow-' + id);
       if (!body) return;
       const isOpen = body.classList.contains('open');
-      // Hamısını bağla
       document.querySelectorAll('.elan-body').forEach(b => b.classList.remove('open'));
       document.querySelectorAll('.elan-arrow').forEach(a => a.classList.remove('open'));
-      // Seçiləni aç (əgər bağlı idisə)
-      if (!isOpen) {
-        body.classList.add('open');
-        if (arrow) arrow.classList.add('open');
-      }
+      if (!isOpen) { body.classList.add('open'); if (arrow) arrow.classList.add('open'); }
       SFX.click();
     }
 
-
-    // ================================================================
-    //  USERS / INSTALL TRACKING
-    // ================================================================
-
-    /**
-     * Cihaz özünü Firebase-ə qeyd edir.
-     * Path: installs/<deviceId>  →  { firstSeen, lastSeen, platform }
-     * Android tərəfi AdsBridge.getDeviceId() metodu vasitəsilə ID ötürür;
-     * brauzer mühitində localStorage-dən yaradılmış ID istifadə olunur.
-     */
     function getOrCreateDeviceId() {
       let id = localStorage.getItem('ft_device_id');
       if (!id) {
@@ -3144,111 +2486,64 @@
     async function registerInstall() {
       try {
         if (!fbReady()) return;
-        // Android köprüsündən gəlibsə real device ID, yoxdursa local ID
         const deviceId = (window.AndroidAds && typeof window.AndroidAds.getDeviceId === 'function')
           ? window.AndroidAds.getDeviceId()
           : getOrCreateDeviceId();
-
         const now = Date.now();
         const path = 'installs/' + deviceId;
-
-        // Mövcud qeydə bax
         const snap = await window._fbGet(window._fbRef(window._fbDb, path));
         const existing = snap.val();
-
         if (existing) {
-          // Artıq qeydiyyatlıdır — yalnız son görülmə vaxtını yenilə
           await window._fbSet(window._fbRef(window._fbDb, path + '/lastSeen'), now);
         } else {
-          // İlk dəfə — tam qeyd yarat
-          await window._fbSet(window._fbRef(window._fbDb, path), {
-            firstSeen: now,
-            lastSeen: now,
-            platform: (window.AndroidAds ? 'android' : 'web')
-          });
+          await window._fbSet(window._fbRef(window._fbDb, path), { firstSeen: now, lastSeen: now, platform: (window.AndroidAds ? 'android' : 'web') });
         }
-      } catch(e) {
-        console.warn('registerInstall error:', e);
-      }
+      } catch(e) { console.warn('registerInstall error:', e); }
     }
 
     async function loadUsersTab() {
       try {
-        const totalEl   = document.getElementById('usersTotal');
-        const todayEl   = document.getElementById('usersToday');
-        const weekEl    = document.getElementById('usersWeek');
-        const monthEl   = document.getElementById('usersMonth');
-        const listEl    = document.getElementById('usersRecentList');
-
+        const totalEl = document.getElementById('usersTotal');
+        const todayEl = document.getElementById('usersToday');
+        const weekEl  = document.getElementById('usersWeek');
+        const monthEl = document.getElementById('usersMonth');
+        const listEl  = document.getElementById('usersRecentList');
         [totalEl, todayEl, weekEl, monthEl].forEach(el => { if(el) el.textContent = '…'; });
         if(listEl) listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Yüklənir...</div>';
-
         if (!fbReady()) { toast('Firebase hazır deyil!', 'error'); return; }
-
         const snap = await window._fbGet(window._fbRef(window._fbDb, 'installs'));
         const data = snap.val() || {};
-        const entries = Object.entries(data); // [[deviceId, {firstSeen, lastSeen, platform}], ...]
-
-        const now   = Date.now();
-        const msDay  = 86400000;
-        const msWeek = 7 * msDay;
-        const msMonth= 30 * msDay;
-
-        let total = entries.length;
-        let today = 0, week = 0, month = 0;
-
-        entries.forEach(([, v]) => {
-          const t = v.firstSeen || 0;
-          if (now - t < msDay)   today++;
-          if (now - t < msWeek)  week++;
-          if (now - t < msMonth) month++;
+        const entries = Object.entries(data);
+        const now = Date.now(), msDay=86400000, msWeek=7*msDay, msMonth=30*msDay;
+        let total=entries.length, today=0, week=0, month=0;
+        entries.forEach(([,v])=>{
+          const t=v.firstSeen||0;
+          if(now-t<msDay) today++;
+          if(now-t<msWeek) week++;
+          if(now-t<msMonth) month++;
         });
-
-        if(totalEl) totalEl.textContent = total;
-        if(todayEl) todayEl.textContent = today;
-        if(weekEl)  weekEl.textContent  = week;
-        if(monthEl) monthEl.textContent = month;
-
-        // Son 20 yükləmə (ən yeni üstdə)
-        const sorted = entries
-          .sort((a, b) => (b[1].firstSeen || 0) - (a[1].firstSeen || 0))
-          .slice(0, 20);
-
+        if(totalEl) totalEl.textContent=total;
+        if(todayEl) todayEl.textContent=today;
+        if(weekEl)  weekEl.textContent=week;
+        if(monthEl) monthEl.textContent=month;
+        const sorted = entries.sort((a,b)=>(b[1].firstSeen||0)-(a[1].firstSeen||0)).slice(0,20);
         if (!listEl) return;
-        if (!sorted.length) {
-          listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Hələ heç bir qeyd yoxdur</div>';
-          return;
-        }
-
-        listEl.innerHTML = sorted.map(([id, v], i) => {
-          const d = new Date(v.firstSeen || 0);
-          const dateStr = d.toLocaleDateString('az-AZ', { day:'2-digit', month:'short', year:'numeric' });
-          const timeStr = d.toLocaleTimeString('az-AZ', { hour:'2-digit', minute:'2-digit' });
-          const platform = v.platform || 'android';
-          const icon = platform === 'web' ? '🌐' : '📱';
-          const shortId = id.length > 16 ? id.slice(0, 8) + '…' + id.slice(-6) : id;
-          return `
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;${i>0?'border-top:1px solid var(--border)':''};">
-              <div style="font-size:22px;">${icon}</div>
-              <div style="flex:1;min-width:0;">
-                <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortId}</div>
-                <div style="font-size:11px;color:var(--text2);margin-top:2px;">${platform}</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0;">
-                <div style="font-size:12px;color:var(--text);">${dateStr}</div>
-                <div style="font-size:11px;color:var(--text2);">${timeStr}</div>
-              </div>
-            </div>`;
+        if (!sorted.length) { listEl.innerHTML='<div style="text-align:center;padding:24px;color:var(--text2);font-size:13px;">Hələ heç bir qeyd yoxdur</div>'; return; }
+        listEl.innerHTML = sorted.map(([id,v],i) => {
+          const d=new Date(v.firstSeen||0);
+          const dateStr=d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short',year:'numeric'});
+          const timeStr=d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});
+          const platform=v.platform||'android';
+          const icon=platform==='web'?'🌐':'📱';
+          const shortId=id.length>16?id.slice(0,8)+'…'+id.slice(-6):id;
+          return `<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;${i>0?'border-top:1px solid var(--border)':''};">
+            <div style="font-size:22px;">${icon}</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortId}</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">${platform}</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-size:12px;color:var(--text);">${dateStr}</div><div style="font-size:11px;color:var(--text2);">${timeStr}</div></div>
+          </div>`;
         }).join('');
-
-      } catch(e) {
-        toast('İstifadəçilər yüklənərkən xəta: ' + e.message, 'error');
-        console.error(e);
-      }
+      } catch(e) { toast('İstifadəçilər yüklənərkən xəta: '+e.message,'error'); console.error(e); }
     }
-
-    // INIT
-
 </script>
 
 <!-- WEB AD OVERLAY -->
@@ -3258,9 +2553,7 @@
     <div id="webAdSlot" style="min-height:120px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:10px;overflow:hidden;"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;">
       <span id="webAdCountdown" style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--warning);min-width:30px;"></span>
-      <button id="webAdSkipBtn" onclick="closeWebAd()" style="display:none;background:linear-gradient(135deg,var(--primary),#0094aa);border:none;color:#000;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;">
-        Keç ▶
-      </button>
+      <button id="webAdSkipBtn" onclick="closeWebAd()" style="display:none;background:linear-gradient(135deg,var(--primary),#0094aa);border:none;color:#000;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;">Keç ▶</button>
     </div>
   </div>
 </div>
