@@ -1079,6 +1079,30 @@
                     ⚠️ Veb reklamı üçün seçdiyiniz şirkətin saytında qeydiyyatdan keçin və kod alın.
                 </div>
             </div>
+
+            <!-- MONETAG -->
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+                <div class="section-head">💰 Monetag Onclick Reklam</div>
+                <div style="font-size:12px;color:var(--text2);line-height:1.7;background:rgba(255,171,0,0.07);border:1px solid rgba(255,171,0,0.25);border-radius:8px;padding:10px;">
+                    ℹ️ Monetag-dan aldığın <strong style="color:var(--warning)">birbaşa linki</strong> buraya yapışdır. İstifadəçi ekrana toxunanda reklam açılır. Aktiv etmək üçün toggle-ı yandır.
+                </div>
+                <div class="input-group">
+                    <label>Monetag Birbaşa Link</label>
+                    <input type="text" class="input-field" id="monetagLink" placeholder="https://omg10.com/4/XXXXXXX">
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:var(--text);">👆 Onclick Reklam</div>
+                        <div style="font-size:11px;color:var(--text2);margin-top:2px;">İlk toxunuşda Monetag linki açılır</div>
+                    </div>
+                    <label class="ads-toggle"><input type="checkbox" id="monetagEnabled" onchange="saveMonetag()"><span class="ads-slider"></span></label>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn btn-success btn-icon" style="flex:1;" onclick="saveMonetag()">💾 Saxla</button>
+                    <button class="btn btn-danger btn-icon" style="flex:1;" onclick="clearMonetag()">🗑 Sil</button>
+                </div>
+                <div id="monetagStatus" style="display:none;font-size:12px;padding:8px 12px;border-radius:8px;"></div>
+            </div>
         </div>
 
         <!-- TAB: USERS -->
@@ -1262,6 +1286,7 @@
       updateFbStatus(null, 'Qoşulur...');
       registerInstall();
       loadWebAdConfig();
+      loadMonetag();
       fbListen('quizzes', (snapshot) => {
         quizzes = snapshot.val() || {};
         updateFbStatus(true, 'Qoşuldu');
@@ -1357,6 +1382,7 @@
       switchTab('quizzes');
       loadAdSettingsUI();
       loadWebAdUI();
+      loadMonetag();
       buildOptionInputs();
       refreshAdminQuizSelects();
       renderQuizMgrList();
@@ -2124,6 +2150,80 @@
       if(el('adToggleGoHome'))     el('adToggleGoHome').checked     = !!s.goHome;
       if(el('adToggleRestart'))    el('adToggleRestart').checked    = !!s.restart;
     }
+
+    // ── MONETAG ONCLICK ──────────────────────────────────────────
+    async function saveMonetag() {
+      const link    = (document.getElementById('monetagLink')?.value || '').trim();
+      const enabled = !!(document.getElementById('monetagEnabled')?.checked);
+      const statusEl = document.getElementById('monetagStatus');
+      try {
+        if (!fbReady()) { toast('Firebase hazır deyil!', 'error'); return; }
+        await window._fbSet(window._fbRef(window._fbDb, 'config/monetag'), { link, enabled: enabled && !!link, updatedAt: Date.now() });
+        applyMonetag(link, enabled && !!link);
+        if (statusEl) {
+          statusEl.style.display = 'block';
+          const on = enabled && !!link;
+          statusEl.style.background = on ? 'rgba(0,230,118,0.1)' : 'rgba(255,23,68,0.08)';
+          statusEl.style.border     = on ? '1px solid rgba(0,230,118,0.3)' : '1px solid rgba(255,23,68,0.3)';
+          statusEl.style.color      = on ? 'var(--success)' : 'var(--error)';
+          statusEl.textContent      = on ? '✅ Monetag aktivdir — bütün cihazlarda işləyir' : '⛔ Monetag söndürüldü';
+        }
+        toast(enabled && link ? 'Monetag aktivləşdirildi ✓' : 'Monetag söndürüldü', 'success');
+      } catch(e) { toast('Xəta: ' + e.message, 'error'); }
+    }
+
+    async function clearMonetag() {
+      const linkEl = document.getElementById('monetagLink');
+      const togEl  = document.getElementById('monetagEnabled');
+      if (linkEl) linkEl.value = '';
+      if (togEl)  togEl.checked = false;
+      await saveMonetag();
+    }
+
+    function applyMonetag(link, enabled) {
+      // Əvvəlki listener-i sil
+      if (window._monetagHandler) {
+        document.removeEventListener('click', window._monetagHandler);
+        window._monetagHandler = null;
+      }
+      if (!enabled || !link) return;
+
+      let fired = false; // hər səhifə yükləməsindən bir dəfə aç
+      window._monetagHandler = function() {
+        if (fired) return;
+        fired = true;
+        window.open(link, '_blank');
+        // 5 dəqiqə sonra yenidən aça bilsin
+        setTimeout(() => { fired = false; }, 5 * 60 * 1000);
+      };
+      document.addEventListener('click', window._monetagHandler);
+    }
+
+    async function loadMonetag() {
+      try {
+        if (!fbReady()) return;
+        const snap = await window._fbGet(window._fbRef(window._fbDb, 'config/monetag'));
+        const val  = snap.val();
+        const linkEl   = document.getElementById('monetagLink');
+        const togEl    = document.getElementById('monetagEnabled');
+        const statusEl = document.getElementById('monetagStatus');
+        if (val && val.link) {
+          if (linkEl) linkEl.value = val.link;
+        }
+        if (togEl) togEl.checked = !!(val && val.enabled);
+        if (val && val.enabled && val.link) {
+          if (statusEl) {
+            statusEl.style.display    = 'block';
+            statusEl.style.background = 'rgba(0,230,118,0.1)';
+            statusEl.style.border     = '1px solid rgba(0,230,118,0.3)';
+            statusEl.style.color      = 'var(--success)';
+            statusEl.textContent      = '✅ Monetag aktivdir — bütün cihazlarda işləyir';
+          }
+          applyMonetag(val.link, true);
+        }
+      } catch(e) {}
+    }
+    // ─────────────────────────────────────────────────────────────
 
     function tryShowInterstitial(callback) {
       // Android app-dadırsa Unity Ads istifadə et
