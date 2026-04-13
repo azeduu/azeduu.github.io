@@ -643,18 +643,18 @@
 
 <!-- DESKTOP NAVBAR -->
 <nav class="desktop-navbar" id="desktopNavbar">
-  <div class="nav-logo" onclick="showScreen('homeScreen');navCloseAll()">📚 azeduu.github.io</div>
-  <div class="nav-items" id="navCatItems"></div>
-  <div class="nav-right" id="navRight">
-    <div class="nav-dropdown" id="navDropElan">
-      <button class="nav-item" onclick="navToggle('navDropElan')">📣 Elanlar ▾</button>
-      <div class="nav-dropdown-menu right" id="navElanMenu">
-        <div style="padding:14px;font-size:13px;color:var(--text2);text-align:center;">Yüklənir...</div>
-      </div>
+    <div class="nav-logo" onclick="showScreen('homeScreen');navCloseAll()">📚 azeduu.github.io</div>
+    <div class="nav-items" id="navCatItems"></div>
+    <div class="nav-right" id="navRight">
+        <div class="nav-dropdown" id="navDropElan">
+            <button class="nav-item" onclick="navToggle('navDropElan')">📣 Elanlar ▾</button>
+            <div class="nav-dropdown-menu right" id="navElanMenu">
+                <div style="padding:14px;font-size:13px;color:var(--text2);text-align:center;">Yüklənir...</div>
+            </div>
+        </div>
+        <button class="nav-icon-btn" onclick="toggleTheme()" id="navThemeBtn" title="Tema">☀️</button>
+        <button class="nav-icon-btn" onclick="toggleSoundGlobal()" id="navSoundBtn" title="Səs">🔊</button>
     </div>
-    <button class="nav-icon-btn" onclick="toggleTheme()" id="navThemeBtn" title="Tema">☀️</button>
-    <button class="nav-icon-btn" onclick="toggleSoundGlobal()" id="navSoundBtn" title="Səs">🔊</button>
-  </div>
 </nav>
 
 <div class="toast-wrap" id="toastWrap"></div>
@@ -2125,7 +2125,28 @@
       if(el('adToggleRestart'))    el('adToggleRestart').checked    = !!s.restart;
     }
 
-    function tryShowInterstitial(callback) { showWebAd(callback); }
+    function tryShowInterstitial(callback) {
+      // Android app-dadırsa Unity Ads istifadə et
+      if (window.AndroidAds && typeof window.AndroidAds.isInterstitialReady === 'function') {
+        if (window.AndroidAds.isInterstitialReady()) {
+          // Unity Ads hazırdır — göstər
+          _adPendingCallback = callback;
+          _adCallbackTimer = setTimeout(() => {
+            // 15 saniyə cavab gəlməsə callback-i özümüz çağır
+            const cb = _adPendingCallback;
+            _adPendingCallback = null;
+            if (cb) cb();
+          }, 15000);
+          window.AndroidAds.showInterstitial();
+        } else {
+          // Unity Ads hələ yüklənməyib — birbaşa callback çağır
+          if (callback) callback();
+        }
+        return;
+      }
+      // Web-dədirsə köhnə HTML overlay sistemi
+      showWebAd(callback);
+    }
 
     function showWebAd(callback) {
       const adCfg = window._webAdConfig || {};
@@ -2548,14 +2569,14 @@
 
 <!-- WEB AD OVERLAY -->
 <div id="webAdOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
-  <div style="position:relative;width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;padding:20px;">
-    <div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:10px;letter-spacing:2px;text-transform:uppercase;">Reklam</div>
-    <div id="webAdSlot" style="min-height:120px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:10px;overflow:hidden;"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;">
-      <span id="webAdCountdown" style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--warning);min-width:30px;"></span>
-      <button id="webAdSkipBtn" onclick="closeWebAd()" style="display:none;background:linear-gradient(135deg,var(--primary),#0094aa);border:none;color:#000;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;">Keç ▶</button>
+    <div style="position:relative;width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;padding:20px;">
+        <div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:10px;letter-spacing:2px;text-transform:uppercase;">Reklam</div>
+        <div id="webAdSlot" style="min-height:120px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:10px;overflow:hidden;"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;">
+            <span id="webAdCountdown" style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--warning);min-width:30px;"></span>
+            <button id="webAdSkipBtn" onclick="closeWebAd()" style="display:none;background:linear-gradient(135deg,var(--primary),#0094aa);border:none;color:#000;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;">Keç ▶</button>
+        </div>
     </div>
-  </div>
 </div>
 
 </body>
