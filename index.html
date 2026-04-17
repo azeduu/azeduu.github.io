@@ -8,11 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- RevenueCat Web SDK -->
+    <script src="https://unpkg.com/@revenuecat/purchases-js@0.15.0/dist/index.umd.js"></script>
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, get, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
         import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDFjnaOu6xdXjKl6EBPrGmq3buRNNeN244",
@@ -28,6 +31,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const storage = getStorage(app);
+        const auth = getAuth(app);
 
         window._fbDb = db;
         window._fbRef = ref;
@@ -37,6 +41,14 @@
         window._fbRemove = remove;
         window._fbOnValue = onValue;
         window._fbReady = true;
+        window._fbAuth = auth;
+        window._fbCreateUser = createUserWithEmailAndPassword;
+        window._fbSignIn = signInWithEmailAndPassword;
+        window._fbSignOut = signOut;
+        window._fbOnAuthStateChanged = onAuthStateChanged;
+        window._fbUpdateProfile = updateProfile;
+        window._fbGoogleProvider = new GoogleAuthProvider();
+        window._fbSignInWithPopup = signInWithPopup;
         window._fbStorage = storage;
         window._fbStorageRef = storageRef;
         window._fbUploadBytes = uploadBytes;
@@ -44,8 +56,21 @@
 
         window.addEventListener('load', () => {
           setTimeout(() => {
-            if (window.appInit) window.appInit();
+            // appInit artıq onAuthChange tərəfindən çağırılır (user login olduqda)
+            // Birbaşa çağırma yoxdur — auth state gözlənilir
           }, 600);
+        });
+
+        // Auth state listener — expose to main script
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            if (window._fbOnAuthStateChanged && window._fbAuth) {
+              window._fbOnAuthStateChanged(window._fbAuth, (user) => {
+                window._currentUser = user || null;
+                if (window.onAuthChange) window.onAuthChange(user);
+              });
+            }
+          }, 800);
         });
     </script>
 
@@ -97,6 +122,7 @@
 
         /* HOME */
         #homeScreen {
+          padding-bottom: 70px;
           align-items: center;
           justify-content: flex-start;
           padding: 30px 20px 30px;
@@ -636,6 +662,69 @@
         .preview-start-btn:active { transform: scale(0.98); }
         .preview-back-btn { background: transparent; border: 2px solid var(--border); color: var(--text2); border-radius: 12px; padding: 11px 24px; font-family: 'Exo 2', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
         .preview-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ===== AUTH SCREEN ===== */
+        #authScreen { position:fixed; inset:0; z-index:9000; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+        #authScreen.hidden { display:none; }
+        .auth-card { background:var(--card); border:1px solid var(--border); border-radius:22px; padding:32px 28px; width:100%; max-width:380px; box-shadow:var(--glow2); }
+        .auth-logo { text-align:center; margin-bottom:24px; }
+        .auth-logo-icon { font-size:48px; display:block; margin-bottom:8px; }
+        .auth-logo-title { font-family:'Exo 2',sans-serif; font-size:20px; font-weight:700; color:var(--primary); }
+        .auth-logo-sub { font-size:13px; color:var(--text2); margin-top:4px; }
+        .auth-tabs { display:flex; gap:0; margin-bottom:24px; background:var(--bg2); border-radius:12px; padding:4px; }
+        .auth-tab { flex:1; padding:9px; border:none; background:transparent; border-radius:9px; font-size:14px; font-weight:600; color:var(--text2); cursor:pointer; transition:all .2s; font-family:'Exo 2',sans-serif; }
+        .auth-tab.active { background:var(--primary); color:#000; }
+        .auth-form { display:flex; flex-direction:column; gap:14px; }
+        .auth-input { width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg2); color:var(--text); font-size:15px; font-family:'Exo 2',sans-serif; outline:none; transition:border .2s; box-sizing:border-box; }
+        .auth-input:focus { border-color:var(--primary); }
+        .auth-btn { width:100%; padding:14px; border-radius:12px; border:none; background:var(--primary); color:#000; font-size:15px; font-weight:700; cursor:pointer; font-family:'Exo 2',sans-serif; transition:opacity .2s; }
+        .auth-btn:active { opacity:.8; }
+        .auth-btn:disabled { opacity:.5; cursor:not-allowed; }
+        .auth-err { color:var(--error); font-size:13px; text-align:center; min-height:18px; }
+        .auth-name-row { display:flex; gap:10px; }
+        .user-bar { position:fixed; bottom:0; left:0; right:0; z-index:1000; background:var(--card); border-top:1px solid var(--border); padding:10px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .user-bar.hidden { display:none; }
+        .user-bar-info { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+        .user-bar-avatar { width:36px; height:36px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; color:#000; flex-shrink:0; }
+        .user-bar-name { font-size:14px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .user-bar-email { font-size:11px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .user-bar-logout { background:transparent; border:1.5px solid var(--border); border-radius:10px; padding:7px 13px; font-size:13px; color:var(--text2); cursor:pointer; white-space:nowrap; font-family:'Exo 2',sans-serif; }
+        .premium-badge { background:var(--primary); color:#000; font-size:11px; font-weight:700; border-radius:8px; padding:2px 8px; margin-left:6px; }
+        .premium-lock { opacity:.4; pointer-events:none; }
+        .auth-divider { text-align:center; font-size:12px; color:var(--text2); margin:4px 0; }
+
+        /* ===== GOOGLE BUTTON ===== */
+        .auth-google-btn { width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg2); color:var(--text); font-size:14px; font-weight:600; cursor:pointer; font-family:'Exo 2',sans-serif; display:flex; align-items:center; justify-content:center; gap:10px; transition:border-color .2s,background .2s; }
+        .auth-google-btn:hover { border-color:var(--primary); background:var(--bg3); }
+        .auth-google-btn svg { flex-shrink:0; }
+        .auth-sep { display:flex; align-items:center; gap:10px; color:var(--text2); font-size:12px; margin:2px 0; }
+        .auth-sep::before,.auth-sep::after { content:''; flex:1; height:1px; background:var(--border); }
+
+        /* ===== PREMIUM QUIZ CARD ===== */
+        .quiz-card-locked { position:relative; opacity:.7; }
+        .quiz-card-locked::after { content:'🔒'; position:absolute; top:50%; right:14px; transform:translateY(-50%); font-size:20px; }
+        .quiz-card-premium-badge { background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; font-size:10px; font-weight:700; border-radius:6px; padding:2px 7px; margin-left:6px; letter-spacing:.3px; }
+
+        /* ===== PREMIUM MODAL ===== */
+        .premium-modal-overlay { position:fixed; inset:0; z-index:8000; background:rgba(0,0,0,.55); display:flex; align-items:flex-end; justify-content:center; }
+        .premium-modal-overlay.hidden { display:none; }
+        .premium-modal { background:var(--card); border-radius:24px 24px 0 0; padding:32px 24px 40px; width:100%; max-width:440px; }
+        .premium-modal-icon { font-size:48px; text-align:center; margin-bottom:12px; }
+        .premium-modal-title { font-size:22px; font-weight:700; color:var(--primary); text-align:center; margin-bottom:8px; font-family:'Exo 2',sans-serif; }
+        .premium-modal-sub { font-size:14px; color:var(--text2); text-align:center; margin-bottom:24px; line-height:1.5; }
+        .premium-plan { border:1.5px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; cursor:pointer; transition:border-color .2s; }
+        .premium-plan.selected { border-color:var(--primary); background:rgba(0,229,255,.06); }
+        .premium-plan-name { font-size:15px; font-weight:700; color:var(--text); }
+        .premium-plan-price { font-size:13px; color:var(--text2); margin-top:3px; }
+        .premium-plan-badge { background:var(--primary); color:#000; font-size:10px; font-weight:700; border-radius:6px; padding:2px 7px; margin-left:8px; }
+        .premium-buy-btn { width:100%; padding:15px; border-radius:14px; border:none; background:var(--primary); color:#000; font-size:16px; font-weight:700; cursor:pointer; font-family:'Exo 2',sans-serif; margin-top:8px; }
+        .premium-buy-btn:disabled { opacity:.5; cursor:not-allowed; }
+        .premium-restore-btn { width:100%; padding:11px; border-radius:12px; border:1.5px solid var(--border); background:transparent; color:var(--text2); font-size:14px; cursor:pointer; font-family:'Exo 2',sans-serif; margin-top:8px; }
+        .premium-close-btn { position:absolute; top:16px; right:20px; background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text2); }
+        .premium-modal-wrap { position:relative; }
+
+        /* ===== USER BAR PREMIUM ===== */
+        .user-bar-premium { background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; font-size:10px; font-weight:700; border-radius:6px; padding:2px 7px; margin-top:2px; display:inline-block; }
     </style>
 </head>
 <body>
@@ -660,6 +749,62 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- HOME -->
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="auth-logo-icon">📚</span>
+      <div class="auth-logo-title">azeduu.github.io</div>
+      <div class="auth-logo-sub">Test Platforması</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Giriş</button>
+      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')">Qeydiyyat</button>
+    </div>
+    <!-- LOGIN FORM -->
+    <div id="authLoginForm" class="auth-form">
+      <button class="auth-google-btn" id="loginGoogleBtn" onclick="doGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/><path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+        Google ilə Daxil Ol
+      </button>
+      <div class="auth-sep">və ya</div>
+      <input class="auth-input" id="loginEmail" type="email" placeholder="E-poçt" autocomplete="email">
+      <input class="auth-input" id="loginPass" type="password" placeholder="Şifrə" autocomplete="current-password">
+      <div class="auth-err" id="loginErr"></div>
+      <button class="auth-btn" id="loginBtn" onclick="doLogin()">Daxil Ol</button>
+    </div>
+    <!-- REGISTER FORM -->
+    <div id="authRegisterForm" class="auth-form" style="display:none;">
+      <button class="auth-google-btn" id="registerGoogleBtn" onclick="doGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/><path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+        Google ilə Qeydiyyat
+      </button>
+      <div class="auth-sep">və ya</div>
+      <div class="auth-name-row">
+        <input class="auth-input" id="regName" type="text" placeholder="Ad" style="flex:1;" autocomplete="given-name">
+        <input class="auth-input" id="regSurname" type="text" placeholder="Soyad" style="flex:1;" autocomplete="family-name">
+      </div>
+      <input class="auth-input" id="regEmail" type="email" placeholder="E-poçt" autocomplete="email">
+      <input class="auth-input" id="regPass" type="password" placeholder="Şifrə (min 6 hərf)" autocomplete="new-password">
+      <input class="auth-input" id="regPass2" type="password" placeholder="Şifrəni təkrarla" autocomplete="new-password">
+      <div class="auth-err" id="registerErr"></div>
+      <button class="auth-btn" id="registerBtn" onclick="doRegister()">Qeydiyyatdan Keç</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER BAR (logged in) -->
+<div class="user-bar hidden" id="userBar">
+  <div class="user-bar-info">
+    <div class="user-bar-avatar" id="userBarAvatar">?</div>
+    <div style="min-width:0;">
+      <div class="user-bar-name" id="userBarName">—</div>
+      <div class="user-bar-email" id="userBarEmail">—</div>
+    </div>
+  </div>
+  <button class="user-bar-logout" onclick="doLogout()">Çıxış</button>
+</div>
+
 <div id="homeScreen" class="screen active">
     <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Menü">&#9776;</button>
 
@@ -669,6 +814,10 @@
         <div class="side-menu-header" style="display:flex;align-items:center;justify-content:space-between;">
             <span>Parametrlər</span>
             <button class="menu-close-btn" onclick="closeMenu()">✕</button>
+        </div>
+        <div id="menuUserInfo" style="padding:12px 16px;border-bottom:1px solid var(--border);display:none;">
+          <div style="font-size:13px;font-weight:600;color:var(--text)" id="menuUserName">—</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px;" id="menuUserEmail">—</div>
         </div>
         <div class="side-menu-item" onclick="toggleTheme()">
             <span id="themeIcon">☀️</span>
@@ -1282,9 +1431,410 @@
       window._fbOnValue(window._fbRef(window._fbDb, path), cb, errCb||console.error);
     }
 
+
+
+
+    // ===== ANDROID NATIVE BRIDGE CALLBACKS =====
+    // Bu funksiyaları Java tərəfi WebView.evaluateJavascript() ilə çağırır
+
+    /** Google Sign-In uğurlu oldu (Android) */
+    window.onAndroidAuthSuccess = function(uid, displayName, email) {
+      // Firebase Auth artıq Java tərəfindən edilib, biz yalnız UI-ı yeniləyirik
+      // Saxta user obyekti qurub onAuthChange-ə ötürürük
+      const fakeUser = {
+        uid: uid,
+        displayName: displayName,
+        email: email,
+        getIdToken: () => Promise.resolve('')
+      };
+      window._currentUser = fakeUser;
+      if (window.onAuthChange) window.onAuthChange(fakeUser);
+    };
+
+    /** Android-dən çıxış */
+    window.onAndroidSignOut = function() {
+      window._currentUser = null;
+      window._currentUserPremium = false;
+      if (window.onAuthChange) window.onAuthChange(null);
+    };
+
+    /** Auth xətası */
+    window.onAndroidAuthError = function(msg) {
+      toast('Xəta: ' + msg, 'error');
+    };
+
+    /** Ödəniş uğurlu (Android) */
+    window.onAndroidPurchaseSuccess = function(isPremium) {
+      window._currentUserPremium = isPremium;
+      updateUserBarPremium(isPremium);
+      closePremiumModal();
+      toast('🎉 Premium aktiv oldu!', 'success');
+      renderHomeQuizList();
+    };
+
+    /** Ödəniş xətası (Android) */
+    window.onAndroidPurchaseError = function(msg) {
+      const errEl = document.getElementById('premiumErr');
+      if (errEl) errEl.textContent = msg;
+      toast('Xəta: ' + msg, 'error');
+    };
+
+    /** Premium status (Android) */
+    window.onAndroidPremiumStatus = function(isPremium) {
+      window._currentUserPremium = isPremium;
+      updateUserBarPremium(isPremium);
+      renderHomeQuizList();
+    };
+
+    /** Bərpa tamamlandı (Android) */
+    window.onAndroidRestoreComplete = function(isPremium) {
+      window._currentUserPremium = isPremium;
+      updateUserBarPremium(isPremium);
+      closePremiumModal();
+      toast(isPremium ? '✅ Premium bərpa edildi!' : 'Aktiv abunə tapılmadı.', isPremium ? 'success' : 'error');
+      renderHomeQuizList();
+    };
+
+    // Android-dirsə Google Sign-In düyməsini native bridge-ə yönləndir
+    // Bu funksiya auth formundakı doGoogleSignIn()-i override edir
+    if (typeof AndroidAuth !== 'undefined') {
+      window._isAndroid = true;
+    }
+
+    // ===== REVENUECAT CONFIG =====
+    // !! ÖZ REVENUECAT WEB API KEY-İNİ BU YERDƏKİ DEĞƏRİ YAZI !!
+    const RC_API_KEY = 'rcb_YOUR_WEB_API_KEY_HERE';
+    const RC_MONTHLY_ID  = 'monthly_premium';   // RevenueCat-dakı product identifier
+    const RC_ANNUAL_ID   = 'annual_premium';    // RevenueCat-dakı product identifier
+    let _rcPurchases = null;
+    let _rcOfferings = null;
+    let _selectedPlanId = RC_MONTHLY_ID;
+
+    async function initRevenueCat(userId) {
+      try {
+        if (typeof Purchases === 'undefined') { console.warn('RevenueCat SDK yüklənmədi'); return; }
+        _rcPurchases = await Purchases.configure(RC_API_KEY, userId);
+        const offerings = await _rcPurchases.getOfferings();
+        _rcOfferings = offerings;
+        // Plan qiymətlərini göstər
+        const current = offerings.current;
+        if (current) {
+          const monthly = current.monthly || current.availablePackages.find(p=>p.identifier===RC_MONTHLY_ID||p.packageType==='MONTHLY');
+          const annual  = current.annual  || current.availablePackages.find(p=>p.identifier===RC_ANNUAL_ID||p.packageType==='ANNUAL');
+          if (monthly) document.getElementById('price_monthly').textContent = monthly.storeProduct.priceString + ' / ay';
+          if (annual)  document.getElementById('price_annual').textContent  = annual.storeProduct.priceString + ' / il';
+        }
+        // Premium statusunu yoxla
+        await checkRCPremiumStatus();
+      } catch(e) { console.warn('RevenueCat init error:', e); }
+    }
+
+    async function checkRCPremiumStatus() {
+      try {
+        if (!_rcPurchases) return;
+        const ci = await _rcPurchases.getCustomerInfo();
+        const active = ci.entitlements.active;
+        const isPremium = active && (active['premium'] || Object.keys(active).length > 0);
+        if (isPremium && window._currentUser) {
+          await window._fbSet(window._fbRef(window._fbDb, 'users/' + window._currentUser.uid + '/premium'), true);
+          window._currentUserPremium = true;
+          updateUserBarPremium(true);
+          renderHomeQuizList(); // yenilə
+        }
+      } catch(e) { console.warn('RC status check error:', e); }
+    }
+
+    function selectPlan(planId) {
+      _selectedPlanId = planId === 'monthly' ? RC_MONTHLY_ID : RC_ANNUAL_ID;
+      document.getElementById('plan_monthly').classList.toggle('selected', planId==='monthly');
+      document.getElementById('plan_annual').classList.toggle('selected', planId==='annual');
+    }
+
+    async function doPremiumPurchase() {
+      const btn = document.getElementById('premiumBuyBtn');
+      const errEl = document.getElementById('premiumErr');
+      errEl.textContent = '';
+
+      // Android cihazda: native Google Play Billing
+      if (window._isAndroid && typeof AndroidAuth !== 'undefined') {
+        btn.disabled = true; btn.textContent = 'Emal olunur...';
+        try {
+          if (_selectedPlanId === RC_ANNUAL_ID) AndroidAuth.purchaseAnnual();
+          else AndroidAuth.purchaseMonthly();
+        } catch(e) { errEl.textContent = 'Xəta: ' + e.message; }
+        finally { btn.disabled = false; btn.textContent = 'İndi Al'; }
+        return;
+      }
+
+      // Web: RevenueCat Web SDK
+      if (!_rcPurchases || !_rcOfferings) {
+        errEl.textContent = 'Ödəniş sistemi hazır deyil. Yenidən cəhd edin.';
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Emal olunur...';
+      try {
+        const current = _rcOfferings.current;
+        const pkg = current.availablePackages.find(p =>
+          p.identifier === _selectedPlanId ||
+          ((_selectedPlanId === RC_MONTHLY_ID) && p.packageType === 'MONTHLY') ||
+          ((_selectedPlanId === RC_ANNUAL_ID)  && p.packageType === 'ANNUAL')
+        );
+        if (!pkg) { errEl.textContent = 'Plan tapılmadı.'; return; }
+        await _rcPurchases.purchase({ rcPackage: pkg });
+        await checkRCPremiumStatus();
+        closePremiumModal();
+        toast('🎉 Premium aktiv oldu!', 'success');
+      } catch(e) {
+        if (e.userCancelled) { /* istifadəçi ləğv etdi */ }
+        else errEl.textContent = 'Xəta: ' + (e.message || 'Ödəniş uğursuz oldu.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'İndi Al';
+      }
+    }
+
+    async function doRestorePurchase() {
+      const errEl = document.getElementById('premiumErr');
+      errEl.textContent = '';
+
+      // Android cihazda
+      if (window._isAndroid && typeof AndroidAuth !== 'undefined') {
+        try { AndroidAuth.restorePurchases(); } catch(e) { errEl.textContent = 'Xəta: ' + e.message; }
+        return;
+      }
+
+      // Web
+      if (!_rcPurchases) { errEl.textContent = 'Ödəniş sistemi hazır deyil.'; return; }
+      try {
+        await _rcPurchases.restorePurchases();
+        await checkRCPremiumStatus();
+        toast('Ödənişlər yoxlanıldı ✓', 'success');
+        closePremiumModal();
+      } catch(e) { errEl.textContent = 'Bərpa xətası: ' + (e.message||''); }
+    }
+
+    function openPremiumModal() {
+      document.getElementById('premiumModal').classList.remove('hidden');
+    }
+
+    function closePremiumModal() {
+      document.getElementById('premiumModal').classList.add('hidden');
+    }
+
+    function updateUserBarPremium(isPremium) {
+      const bar = document.getElementById('userBar');
+      if (!bar) return;
+      let badge = bar.querySelector('.user-bar-premium');
+      if (isPremium && !badge) {
+        badge = document.createElement('div');
+        badge.className = 'user-bar-premium';
+        badge.textContent = '⭐ Premium';
+        const emailEl = document.getElementById('userBarEmail');
+        if (emailEl) emailEl.parentNode.insertBefore(badge, emailEl.nextSibling);
+      } else if (!isPremium && badge) {
+        badge.remove();
+      }
+    }
+
+    // ===== GOOGLE SIGN IN =====
+    async function doGoogleSignIn() {
+      // Android cihazda: native Google Sign-In istifadə et
+      if (window._isAndroid && typeof AndroidAuth !== 'undefined') {
+        try { AndroidAuth.signInWithGoogle(); } catch(e) { console.warn('Android Google Sign-In error:', e); }
+        return;
+      }
+      // Web: Firebase popup
+      const errEl = document.getElementById('loginErr') || document.getElementById('registerErr');
+      try {
+        const result = await window._fbSignInWithPopup(window._fbAuth, window._fbGoogleProvider);
+        const user = result.user;
+        const snap = await window._fbGet(window._fbRef(window._fbDb, 'users/' + user.uid));
+        if (!snap.val()) {
+          const nameParts = (user.displayName||'').split(' ');
+          await window._fbSet(window._fbRef(window._fbDb, 'users/' + user.uid), {
+            name: nameParts[0]||'',
+            surname: nameParts.slice(1).join(' ')||'',
+            email: user.email||'',
+            premium: false,
+            createdAt: Date.now(),
+            provider: 'google'
+          });
+        }
+      } catch(e) {
+        if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
+          if (errEl) errEl.textContent = authErrMsg(e.code);
+        }
+      }
+    }
+
+    // ===== PREMIUM QUIZ TOGGLE (admin) =====
+    async function toggleQuizPremium(id, val) {
+      SFX.click();
+      try {
+        await fbSet(`quizzes/${id}/premium`, val);
+        toast(val ? '⭐ Premium test edildi' : '🔓 Pulsuz edildi', 'success');
+      } catch(e) { toast('Xəta: '+e.message,'error'); }
+    }
+
+    // ===== IS PREMIUM CHECK =====
+    function isPremiumUser() {
+      return !!window._currentUserPremium;
+    }
+
+    // ===== AUTH HELPERS =====
+    let _authReady = false;
+
+    function switchAuthTab(tab) {
+      document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
+      document.getElementById('authTabRegister').classList.toggle('active', tab==='register');
+      document.getElementById('authLoginForm').style.display = tab==='login' ? 'flex' : 'none';
+      document.getElementById('authRegisterForm').style.display = tab==='register' ? 'flex' : 'none';
+      document.getElementById('loginErr').textContent = '';
+      document.getElementById('registerErr').textContent = '';
+    }
+
+    function authErrMsg(code) {
+      const map = {
+        'auth/email-already-in-use': 'Bu e-poçt artıq qeydiyyatlıdır.',
+        'auth/invalid-email': 'E-poçt formatı yanlışdır.',
+        'auth/weak-password': 'Şifrə ən az 6 simvol olmalıdır.',
+        'auth/user-not-found': 'Bu e-poçt tapılmadı.',
+        'auth/wrong-password': 'Şifrə yanlışdır.',
+        'auth/invalid-credential': 'E-poçt və ya şifrə yanlışdır.',
+        'auth/too-many-requests': 'Çox cəhd. Bir az gözləyin.',
+        'auth/network-request-failed': 'İnternet bağlantısı yoxdur.',
+      };
+      return map[code] || 'Xəta baş verdi. Yenidən cəhd edin.';
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass  = document.getElementById('loginPass').value;
+      const errEl = document.getElementById('loginErr');
+      const btn   = document.getElementById('loginBtn');
+      errEl.textContent = '';
+      if (!email || !pass) { errEl.textContent = 'E-poçt və şifrəni daxil edin.'; return; }
+      btn.disabled = true; btn.textContent = 'Yüklənir...';
+      try {
+        await window._fbSignIn(window._fbAuth, email, pass);
+      } catch(e) {
+        errEl.textContent = authErrMsg(e.code);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Daxil Ol';
+      }
+    }
+
+    async function doRegister() {
+      const name   = document.getElementById('regName').value.trim();
+      const surname= document.getElementById('regSurname').value.trim();
+      const email  = document.getElementById('regEmail').value.trim();
+      const pass   = document.getElementById('regPass').value;
+      const pass2  = document.getElementById('regPass2').value;
+      const errEl  = document.getElementById('registerErr');
+      const btn    = document.getElementById('registerBtn');
+      errEl.textContent = '';
+      if (!name || !surname) { errEl.textContent = 'Ad və soyadınızı daxil edin.'; return; }
+      if (!email) { errEl.textContent = 'E-poçt daxil edin.'; return; }
+      if (pass.length < 6) { errEl.textContent = 'Şifrə ən az 6 simvol olmalıdır.'; return; }
+      if (pass !== pass2) { errEl.textContent = 'Şifrələr uyğun gəlmir.'; return; }
+      btn.disabled = true; btn.textContent = 'Qeydiyyat...';
+      try {
+        const cred = await window._fbCreateUser(window._fbAuth, email, pass);
+        await window._fbUpdateProfile(cred.user, { displayName: name + ' ' + surname });
+        // Firebase Realtime DB-ə istifadəçi məlumatı yaz
+        await window._fbSet(window._fbRef(window._fbDb, 'users/' + cred.user.uid), {
+          name: name,
+          surname: surname,
+          email: email,
+          premium: false,
+          createdAt: Date.now()
+        });
+      } catch(e) {
+        errEl.textContent = authErrMsg(e.code);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Qeydiyyatdan Keç';
+      }
+    }
+
+    async function doLogout() {
+      try {
+        await window._fbSignOut(window._fbAuth);
+      } catch(e) { console.warn('logout err:', e); }
+    }
+
+    function showAuthScreen() {
+      document.getElementById('authScreen').classList.remove('hidden');
+      document.getElementById('userBar').classList.add('hidden');
+    }
+
+    function hideAuthScreen(user) {
+      document.getElementById('authScreen').classList.add('hidden');
+      // User bar yenilə
+      const bar = document.getElementById('userBar');
+      bar.classList.remove('hidden');
+      const displayName = user.displayName || user.email || 'İstifadəçi';
+      const initials = displayName.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase() || '?';
+      document.getElementById('userBarAvatar').textContent = initials;
+      document.getElementById('userBarName').textContent = displayName;
+      document.getElementById('userBarEmail').textContent = user.email || '';
+      // Side menu user info
+      const mui = document.getElementById('menuUserInfo');
+      if (mui) {
+        mui.style.display = 'block';
+        document.getElementById('menuUserName').textContent = displayName;
+        document.getElementById('menuUserEmail').textContent = user.email || '';
+      }
+    }
+
+    // Auth state change handler — module script bunu çağırır
+    window.onAuthChange = function(user) {
+      if (user) {
+        hideAuthScreen(user);
+        if (!_authReady) {
+          _authReady = true;
+          if (window._fbReady && window.appInit && !window._appInited) {
+            window._appInited = true;
+            window.appInit();
+          }
+        }
+        // Premium statusunu Firebase-dən yoxla
+        window._fbGet(window._fbRef(window._fbDb, 'users/' + user.uid + '/premium')).then(snap => {
+          window._currentUserPremium = !!snap.val();
+          updateUserBarPremium(window._currentUserPremium);
+          renderHomeQuizList();
+        }).catch(()=>{});
+        // RevenueCat init
+        if (typeof initRevenueCat === 'function') {
+          initRevenueCat(user.uid);
+        }
+      } else {
+        _authReady = false;
+        window._appInited = false;
+        window._currentUserPremium = false;
+        showAuthScreen();
+        document.getElementById('userBar').classList.add('hidden');
+      }
+    };
+
+    // Enter key handlers
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') {
+        const loginForm = document.getElementById('authLoginForm');
+        const regForm = document.getElementById('authRegisterForm');
+        if (loginForm && loginForm.style.display !== 'none' && 
+            document.getElementById('authScreen') && 
+            !document.getElementById('authScreen').classList.contains('hidden')) {
+          doLogin();
+        }
+      }
+    });
+
     window.appInit = function() {
       updateFbStatus(null, 'Qoşulur...');
       registerInstall();
+      // Premium check
+      if (window._currentUser) {
+        window._fbGet(window._fbRef(window._fbDb, 'users/' + window._currentUser.uid + '/premium')).then(snap => { window._currentUserPremium = !!snap.val(); }).catch(()=>{});
+      }
       loadWebAdConfig();
       loadMonetag();
       fbListen('quizzes', (snapshot) => {
@@ -1341,14 +1891,15 @@
         const q = quizzes[id];
         const qCount = q.questions ? Object.keys(q.questions).length : 0;
         const s = q.settings || DEFAULT_SETTINGS;
+        const isLocked = !!q.premium && !isPremiumUser();
         return `
-          <div class="quiz-card-home" onclick="startQuiz('${id}')">
+          <div class="quiz-card-home ${isLocked?'quiz-card-locked':''}" onclick="${isLocked?'openPremiumModal()':'startQuiz(\''+id+'\')'}">
             <div class="quiz-card-icon">${q.icon||'📝'}</div>
             <div class="quiz-card-info">
-              <div class="quiz-card-name">${q.name||'Test'}</div>
+              <div class="quiz-card-name">${q.name||'Test'}${q.premium?'<span class=\'quiz-card-premium-badge\'>⭐ Premium</span>':''}</div>
               <div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div>
             </div>
-            <div class="quiz-card-arrow">▶</div>
+            <div class="quiz-card-arrow">${isLocked?'🔒':'▶'}</div>
           </div>`;
       }).join('');
     }
@@ -1425,18 +1976,20 @@
         const q = quizzes[id];
         const qCount = q.questions ? Object.keys(q.questions).length : 0;
         const isEnabled = !!q.enabled;
+        const isPremium = !!q.premium;
         return `
           <div class="quiz-mgr-card">
             <div class="quiz-mgr-icon">${q.icon||'📝'}</div>
             <div class="quiz-mgr-info">
               <div class="quiz-mgr-name">${q.name}</div>
-              <div class="quiz-mgr-meta">${qCount} sual &nbsp;·&nbsp; <span style="color:${isEnabled?'var(--success)':'var(--error)'}">${isEnabled?'✅ Aktiv':'🔴 Gizli'}</span></div>
+              <div class="quiz-mgr-meta">${qCount} sual &nbsp;·&nbsp; <span style="color:${isEnabled?'var(--success)':'var(--error)'}">${isEnabled?'✅ Aktiv':'🔴 Gizli'}</span>${isPremium ? ' &nbsp;·&nbsp; <span style="color:#f59e0b">⭐ Premium</span>' : ''}</div>
             </div>
-            <div class="quiz-mgr-actions" style="display:flex;align-items:center;gap:8px;">
+            <div class="quiz-mgr-actions" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
               <label class="toggle" title="${isEnabled?'Söndür':'Yandır'}" style="flex-shrink:0;">
                 <input type="checkbox" ${isEnabled?'checked':''} onchange="toggleQuizEnabled('${id}', this.checked)">
                 <span class="toggle-slider"></span>
               </label>
+              <button class="btn btn-sm ${isPremium?'btn-primary':'btn-outline'}" title="Premium Test" onclick="toggleQuizPremium('${id}', ${!isPremium})" style="font-size:13px;padding:5px 10px;">${isPremium?'⭐ Premium':'🔓 Pulsuz'}</button>
               <button class="btn btn-sm btn-outline" onclick="editQuizName('${id}')">✏️</button>
               <button class="btn btn-sm btn-danger" onclick="deleteQuiz('${id}')">🗑</button>
             </div>
@@ -1798,6 +2351,11 @@
     function startQuiz(qid, fromScreen) {
       const quizData = quizzes[qid];
       if (!quizData) { toast('Test tapılmadı!','error'); return; }
+      // Premium yoxlama
+      if (quizData.premium && !isPremiumUser()) {
+        openPremiumModal();
+        return;
+      }
       const rawQs = quizData.questions ? Object.entries(quizData.questions).map(([id,v])=>({id,...v})) : [];
       if (!rawQs.length) { toast('Bu testdə sual yoxdur!','error'); return; }
 
@@ -2437,7 +2995,8 @@
             const q = quizzes[qid]; if (!q || !q.enabled) return '';
             const qCount = q.questions ? Object.keys(q.questions).length : 0;
             const s = q.settings || DEFAULT_SETTINGS;
-            return `<div class="quiz-card-home" onclick="startQuiz('${qid}')"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">▶</div></div>`;
+            const isLocked = !!q.premium && !isPremiumUser();
+            return `<div class="quiz-card-home ${isLocked?'quiz-card-locked':''}" onclick="${isLocked?'openPremiumModal()':'startQuiz(\''+qid+'\')'}"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}${q.premium?'<span class=\'quiz-card-premium-badge\'>⭐ Premium</span>':''}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">${isLocked?'🔒':'▶'}</div></div>`;
           }).filter(Boolean).join('');
         }
         showScreen('homeScreen');
@@ -2452,7 +3011,8 @@
             const q = quizzes[qid]; if (!q || !q.enabled) return '';
             const qCount = q.questions ? Object.keys(q.questions).length : 0;
             const s = q.settings || DEFAULT_SETTINGS;
-            return `<div class="quiz-card-home" onclick="startQuiz('${qid}')"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">▶</div></div>`;
+            const isLocked = !!q.premium && !isPremiumUser();
+            return `<div class="quiz-card-home ${isLocked?'quiz-card-locked':''}" onclick="${isLocked?'openPremiumModal()':'startQuiz(\''+qid+'\')'}"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}${q.premium?'<span class=\'quiz-card-premium-badge\'>⭐ Premium</span>':''}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">${isLocked?'🔒':'▶'}</div></div>`;
           }).filter(Boolean).join('');
         }
         showScreen('categoryScreen');
@@ -2696,5 +3256,33 @@
     </div>
 </div>
 
+
+<!-- PREMIUM MODAL -->
+<div class="premium-modal-overlay hidden" id="premiumModal">
+  <div class="premium-modal premium-modal-wrap">
+    <button class="premium-close-btn" onclick="closePremiumModal()">✕</button>
+    <div class="premium-modal-icon">⭐</div>
+    <div class="premium-modal-title">Premium ol</div>
+    <div class="premium-modal-sub">Bu test Premium üzvlər üçündür.<br>Bütün testlərə limitsiz giriş əldə et!</div>
+    <div id="premiumPlansContainer">
+      <div class="premium-plan selected" id="plan_monthly" onclick="selectPlan('monthly')">
+        <div style="display:flex;align-items:center;">
+          <span class="premium-plan-name">Aylıq Plan</span>
+        </div>
+        <div class="premium-plan-price" id="price_monthly">Yüklənir...</div>
+      </div>
+      <div class="premium-plan" id="plan_annual" onclick="selectPlan('annual')">
+        <div style="display:flex;align-items:center;">
+          <span class="premium-plan-name">İllik Plan</span>
+          <span class="premium-plan-badge">Sərfəli</span>
+        </div>
+        <div class="premium-plan-price" id="price_annual">Yüklənir...</div>
+      </div>
+    </div>
+    <div class="auth-err" id="premiumErr" style="margin-top:8px;"></div>
+    <button class="premium-buy-btn" id="premiumBuyBtn" onclick="doPremiumPurchase()">İndi Al</button>
+    <button class="premium-restore-btn" onclick="doRestorePurchase()">Ödənişi Bərpa Et</button>
+  </div>
+</div>
 </body>
 </html>
