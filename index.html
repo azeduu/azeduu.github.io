@@ -1331,8 +1331,12 @@
         listEl.innerHTML = '<div class="no-quizzes">Hələ test yaradılmayıb.<br>Köhnə testlər isə menyudakı kateqoriyalardan tapıla bilər.</div>';
         return;
       }
-      const last10 = [...ids].reverse().slice(0, 10);
+      const last10 = [...ids].reverse().filter(id => quizzes[id] && quizzes[id].enabled).slice(0, 10);
       sec.style.display = 'flex';
+      if (!last10.length) {
+        listEl.innerHTML = '<div class="no-quizzes">Hələ aktiv test yoxdur.</div>';
+        return;
+      }
       listEl.innerHTML = last10.map(id => {
         const q = quizzes[id];
         const qCount = q.questions ? Object.keys(q.questions).length : 0;
@@ -1402,7 +1406,7 @@
       const icon = document.getElementById('newQuizIcon').value.trim() || '📝';
       if (!name) { toast('Test adı boş ola bilməz!','error'); return; }
       try {
-        await fbPush('quizzes', { name, icon, settings: {...DEFAULT_SETTINGS} });
+        await fbPush('quizzes', { name, icon, enabled: false, settings: {...DEFAULT_SETTINGS} });
         SFX.save();
         toast(`"${name}" testi yaradıldı ✓`,'success');
         document.getElementById('newQuizName').value = '';
@@ -1420,19 +1424,32 @@
       container.innerHTML = ids.map(id => {
         const q = quizzes[id];
         const qCount = q.questions ? Object.keys(q.questions).length : 0;
+        const isEnabled = !!q.enabled;
         return `
           <div class="quiz-mgr-card">
             <div class="quiz-mgr-icon">${q.icon||'📝'}</div>
             <div class="quiz-mgr-info">
               <div class="quiz-mgr-name">${q.name}</div>
-              <div class="quiz-mgr-meta">${qCount} sual</div>
+              <div class="quiz-mgr-meta">${qCount} sual &nbsp;·&nbsp; <span style="color:${isEnabled?'var(--success)':'var(--error)'}">${isEnabled?'✅ Aktiv':'🔴 Gizli'}</span></div>
             </div>
-            <div class="quiz-mgr-actions">
+            <div class="quiz-mgr-actions" style="display:flex;align-items:center;gap:8px;">
+              <label class="toggle" title="${isEnabled?'Söndür':'Yandır'}" style="flex-shrink:0;">
+                <input type="checkbox" ${isEnabled?'checked':''} onchange="toggleQuizEnabled('${id}', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
               <button class="btn btn-sm btn-outline" onclick="editQuizName('${id}')">✏️</button>
               <button class="btn btn-sm btn-danger" onclick="deleteQuiz('${id}')">🗑</button>
             </div>
           </div>`;
       }).join('');
+    }
+
+    async function toggleQuizEnabled(id, val) {
+      SFX.click();
+      try {
+        await fbSet(`quizzes/${id}/enabled`, val);
+        toast(val ? '✅ Test aktivləşdirildi' : '🔴 Test gizlədildi', val ? 'success' : 'error');
+      } catch(e) { toast('Xəta: '+e.message,'error'); }
     }
 
     function deleteQuiz(id) {
@@ -2417,7 +2434,7 @@
         } else {
           sec.style.display = 'flex';
           listEl.innerHTML = qIds.map(qid => {
-            const q = quizzes[qid]; if (!q) return '';
+            const q = quizzes[qid]; if (!q || !q.enabled) return '';
             const qCount = q.questions ? Object.keys(q.questions).length : 0;
             const s = q.settings || DEFAULT_SETTINGS;
             return `<div class="quiz-card-home" onclick="startQuiz('${qid}')"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">▶</div></div>`;
@@ -2432,7 +2449,7 @@
           body.innerHTML = '<div class="no-quizzes">Bu kateqoriyada test yoxdur.</div>';
         } else {
           body.innerHTML = qIds.map(qid => {
-            const q = quizzes[qid]; if (!q) return '';
+            const q = quizzes[qid]; if (!q || !q.enabled) return '';
             const qCount = q.questions ? Object.keys(q.questions).length : 0;
             const s = q.settings || DEFAULT_SETTINGS;
             return `<div class="quiz-card-home" onclick="startQuiz('${qid}')"><div class="quiz-card-icon">${q.icon||'📝'}</div><div class="quiz-card-info"><div class="quiz-card-name">${q.name||'Test'}</div><div class="quiz-card-meta">${qCount} sual &nbsp;·&nbsp; ⏱ ${s.timeLimit||30} dəq</div></div><div class="quiz-card-arrow">▶</div></div>`;
