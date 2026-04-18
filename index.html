@@ -714,6 +714,48 @@
         input:checked + .toggle-slider::before { transform:translateX(20px); }
         /* home screen bottom padding for user bar */
         .screen { padding-bottom: 60px; }
+
+        /* ===== PROFILE / USER PANEL SCREEN ===== */
+        #profileScreen { padding:0; overflow-y:auto; }
+        .profile-header { background:linear-gradient(135deg,#0a1628 0%,#0d2040 100%); padding:40px 20px 28px; display:flex; flex-direction:column; align-items:center; gap:14px; border-bottom:1px solid var(--border); }
+        .profile-avatar-big { width:80px; height:80px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:700; color:#000; border:3px solid rgba(0,229,255,.3); position:relative; }
+        .profile-avatar-premium { position:absolute; bottom:-2px; right:-2px; background:linear-gradient(135deg,#f59e0b,#f97316); border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid var(--bg); }
+        .profile-name { font-size:20px; font-weight:700; color:var(--text); font-family:'Exo 2',sans-serif; }
+        .profile-email { font-size:13px; color:var(--text2); }
+        .profile-badges { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+        .profile-badge { border-radius:20px; padding:4px 12px; font-size:12px; font-weight:600; }
+        .pb-free { background:rgba(255,255,255,.08); color:var(--text2); border:1px solid var(--border); }
+        .pb-premium { background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; }
+        .pb-provider { background:rgba(0,229,255,.1); color:var(--primary); border:1px solid rgba(0,229,255,.2); }
+        .profile-body { padding:16px; display:flex; flex-direction:column; gap:12px; }
+        .profile-section-title { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; padding:0 4px; margin-bottom:2px; }
+        .profile-card { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+        .profile-row { display:flex; align-items:center; gap:14px; padding:14px 16px; }
+        .profile-row + .profile-row { border-top:1px solid var(--border); }
+        .profile-row-icon { font-size:20px; width:28px; text-align:center; flex-shrink:0; }
+        .profile-row-info { flex:1; min-width:0; }
+        .profile-row-label { font-size:12px; color:var(--text2); }
+        .profile-row-value { font-size:14px; font-weight:600; color:var(--text); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .profile-row-action { background:transparent; border:1.5px solid var(--border); border-radius:9px; padding:6px 12px; font-size:13px; color:var(--text2); cursor:pointer; white-space:nowrap; font-family:'Exo 2',sans-serif; flex-shrink:0; }
+        .profile-row-action:active { opacity:.7; }
+        .profile-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .profile-stat { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; text-align:center; }
+        .profile-stat-num { font-family:'Rajdhani',sans-serif; font-size:32px; font-weight:700; color:var(--primary); }
+        .profile-stat-label { font-size:11px; color:var(--text2); margin-top:4px; text-transform:uppercase; letter-spacing:.5px; }
+        .profile-premium-banner { background:linear-gradient(135deg,#1a1000,#2a1800); border:1px solid #f59e0b44; border-radius:16px; padding:18px 16px; display:flex; align-items:center; gap:14px; cursor:pointer; }
+        .profile-premium-banner:active { opacity:.85; }
+        .ppb-icon { font-size:32px; flex-shrink:0; }
+        .ppb-title { font-size:15px; font-weight:700; color:#f59e0b; font-family:'Exo 2',sans-serif; }
+        .ppb-sub { font-size:12px; color:#a07830; margin-top:3px; line-height:1.4; }
+        .ppb-arrow { font-size:20px; color:#f59e0b; margin-left:auto; flex-shrink:0; }
+        .profile-back-btn { position:absolute; top:16px; left:16px; background:rgba(255,255,255,.08); border:none; border-radius:10px; padding:8px 14px; color:var(--text); font-size:14px; cursor:pointer; font-family:'Exo 2',sans-serif; }
+        .profile-logout-btn { width:100%; padding:14px; border-radius:12px; border:1.5px solid var(--error,#ff5555); background:transparent; color:var(--error,#ff5555); font-size:15px; font-weight:600; cursor:pointer; font-family:'Exo 2',sans-serif; margin-top:4px; }
+        .profile-change-pass { width:100%; padding:12px; border-radius:12px; border:1.5px solid var(--border); background:transparent; color:var(--text2); font-size:14px; cursor:pointer; font-family:'Exo 2',sans-serif; }
+        /* edit name modal */
+        #editNameModal { position:fixed; inset:0; z-index:9950; background:rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; padding:24px; }
+        #editNameModal.hidden { display:none; }
+        .edit-name-card { background:var(--card); border-radius:20px; padding:24px; width:100%; max-width:340px; }
+        .edit-name-title { font-size:17px; font-weight:700; color:var(--text); margin-bottom:16px; font-family:'Exo 2',sans-serif; }
     </style>
 </head>
 <body>
@@ -791,13 +833,14 @@
 
 <!-- USER BAR -->
 <div id="userBar" class="hidden">
-  <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+  <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer;" onclick="openProfile()">
     <div class="ub-avatar" id="ubAvatar">?</div>
     <div style="min-width:0;">
       <div class="ub-name" id="ubName">—</div>
       <div class="ub-email" id="ubEmail">—</div>
     </div>
   </div>
+  <button class="ub-logout" style="background:rgba(0,229,255,.08);border-color:rgba(0,229,255,.2);color:var(--primary);" onclick="openProfile()">👤 Profil</button>
   <button class="ub-logout" onclick="doLogout()">Çıxış</button>
 </div>
 
@@ -928,6 +971,157 @@
 </div>
 
 <!-- RESULT -->
+
+<!-- ═══════════════════════════════════════
+     PROFILE / USER PANEL SCREEN
+═══════════════════════════════════════ -->
+<div id="profileScreen" class="screen">
+  <div style="position:relative;">
+    <button class="profile-back-btn" onclick="showScreen('homeScreen')">← Geri</button>
+    <div class="profile-header">
+      <div class="profile-avatar-big" id="profAvatarBig">
+        <span id="profInitials">?</span>
+        <div class="profile-avatar-premium" id="profPremiumBadge" style="display:none;">⭐</div>
+      </div>
+      <div>
+        <div class="profile-name" id="profName">—</div>
+        <div class="profile-email" id="profEmail">—</div>
+      </div>
+      <div class="profile-badges" id="profBadges"></div>
+    </div>
+  </div>
+
+  <div class="profile-body">
+
+    <!-- Statistika -->
+    <div class="profile-section-title">📊 Statistika</div>
+    <div class="profile-stat-grid">
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="profStatTests">—</div>
+        <div class="profile-stat-label">Həll edilən test</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="profStatScore">—</div>
+        <div class="profile-stat-label">Orta nəticə</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="profStatCorrect">—</div>
+        <div class="profile-stat-label">Doğru cavab</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="profStatStreak">—</div>
+        <div class="profile-stat-label">Ardıcıl gün</div>
+      </div>
+    </div>
+
+    <!-- Premium banner (yalnız free istifadəçilərə) -->
+    <div class="profile-premium-banner" id="profPremiumBanner" onclick="openPremiumModal()">
+      <div class="ppb-icon">⭐</div>
+      <div>
+        <div class="ppb-title">Premium ol</div>
+        <div class="ppb-sub">Bütün premium testlərə limitsiz giriş əldə et</div>
+      </div>
+      <div class="ppb-arrow">›</div>
+    </div>
+
+    <!-- Hesab məlumatları -->
+    <div class="profile-section-title">👤 Hesab</div>
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="profile-row-icon">✏️</div>
+        <div class="profile-row-info">
+          <div class="profile-row-label">Ad Soyad</div>
+          <div class="profile-row-value" id="profRowName">—</div>
+        </div>
+        <button class="profile-row-action" onclick="openEditName()">Dəyiş</button>
+      </div>
+      <div class="profile-row">
+        <div class="profile-row-icon">📧</div>
+        <div class="profile-row-info">
+          <div class="profile-row-label">E-poçt</div>
+          <div class="profile-row-value" id="profRowEmail">—</div>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="profile-row-icon">📅</div>
+        <div class="profile-row-info">
+          <div class="profile-row-label">Qeydiyyat tarixi</div>
+          <div class="profile-row-value" id="profRowDate">—</div>
+        </div>
+      </div>
+      <div class="profile-row" id="profRowProvider">
+        <div class="profile-row-icon">🔑</div>
+        <div class="profile-row-info">
+          <div class="profile-row-label">Giriş üsulu</div>
+          <div class="profile-row-value" id="profRowProviderVal">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Abunəlik -->
+    <div class="profile-section-title">💳 Abunəlik</div>
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="profile-row-icon">🏆</div>
+        <div class="profile-row-info">
+          <div class="profile-row-label">Plan</div>
+          <div class="profile-row-value" id="profPlanName">Pulsuz</div>
+        </div>
+        <button class="profile-row-action" id="profPlanBtn" onclick="openPremiumModal()">Yüksəlt</button>
+      </div>
+      <div class="profile-row" id="profRestoreRow">
+        <div class="profile-row-icon">🔄</div>
+        <div class="profile-row-info">
+          <div class="profile-row-label">Ödənişi bərpa et</div>
+          <div class="profile-row-value" style="font-size:12px;">Əvvəlki abunəni bərpa et</div>
+        </div>
+        <button class="profile-row-action" onclick="doRestorePurchase()">Bərpa</button>
+      </div>
+    </div>
+
+    <!-- Şifrə dəyiş (yalnız email ilə qeydiyyatlı olanlara) -->
+    <div id="profPasswordSection">
+      <button class="profile-change-pass" onclick="openChangePassword()">🔒 Şifrəni Dəyiş</button>
+    </div>
+
+    <!-- Çıxış -->
+    <button class="profile-logout-btn" onclick="doLogout();showScreen('homeScreen')">Çıxış Et</button>
+
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- EDIT NAME MODAL -->
+<div id="editNameModal" class="hidden">
+  <div class="edit-name-card">
+    <div class="edit-name-title">✏️ Adı Dəyiş</div>
+    <div style="display:flex;gap:10px;margin-bottom:12px;">
+      <input class="auth-input" id="enName" type="text" placeholder="Ad"    style="flex:1;">
+      <input class="auth-input" id="enSur"  type="text" placeholder="Soyad" style="flex:1;">
+    </div>
+    <div class="auth-err" id="enErr"></div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="auth-btn" onclick="saveEditName()" style="flex:2;">Saxla</button>
+      <button class="auth-btn" onclick="document.getElementById('editNameModal').classList.add('hidden')" style="flex:1;background:var(--bg2);color:var(--text);">Ləğv</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div id="changePassModal" class="hidden">
+  <div class="edit-name-card">
+    <div class="edit-name-title">🔒 Şifrəni Dəyiş</div>
+    <input class="auth-input" id="cpOld"  type="password" placeholder="Köhnə şifrə"    style="margin-bottom:10px;">
+    <input class="auth-input" id="cpNew"  type="password" placeholder="Yeni şifrə"     style="margin-bottom:10px;">
+    <input class="auth-input" id="cpNew2" type="password" placeholder="Yeni şifrə (təkrar)" style="margin-bottom:10px;">
+    <div class="auth-err" id="cpErr"></div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="auth-btn" onclick="saveChangePassword()" style="flex:2;">Dəyiş</button>
+      <button class="auth-btn" onclick="document.getElementById('changePassModal').classList.add('hidden')" style="flex:1;background:var(--bg2);color:var(--text);">Ləğv</button>
+    </div>
+  </div>
+</div>
+
 <div id="resultScreen" class="screen">
     <div class="result-header">
         <div class="result-score-circle">
@@ -1389,7 +1583,7 @@
       document.getElementById(id).classList.add('active');
       navCloseAll();
       const navbar = document.getElementById('desktopNavbar');
-      if (navbar) navbar.style.display = (id === 'adminScreen') ? 'none' : '';
+      if (navbar) navbar.style.display = (id === 'adminScreen' || id === 'profileScreen') ? 'none' : '';
       const inQuiz = (id === 'quizScreen');
       const navCatItems = document.getElementById('navCatItems');
       const navRight    = document.getElementById('navRight');
@@ -1936,6 +2130,192 @@
         await fbSet('quizzes/'+id+'/premium', val);
         toast(val?'⭐ Premium edildi':'🔓 Pulsuz edildi','success');
       } catch(e) { toast('Xəta: '+e.message,'error'); }
+    }
+
+
+    // ════════════════════════════════════════════════════
+    //  PROFILE / USER PANEL
+    // ════════════════════════════════════════════════════
+
+    function openProfile() {
+      if (!_currentUser) { openAuthModal('login'); return; }
+      showScreen('profileScreen');
+      loadProfileData();
+    }
+
+    async function loadProfileData() {
+      const user = _currentUser;
+      if (!user) return;
+
+      // Avatar & name
+      const name = user.displayName || user.email || 'İstifadəçi';
+      const initials = name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase() || '?';
+      document.getElementById('profInitials').textContent = initials;
+      document.getElementById('profName').textContent = name;
+      document.getElementById('profEmail').textContent = user.email || '';
+      document.getElementById('profRowName').textContent = name;
+      document.getElementById('profRowEmail').textContent = user.email || '';
+
+      // Premium badge
+      const premBadge = document.getElementById('profPremiumBadge');
+      const banner    = document.getElementById('profPremiumBanner');
+      const planName  = document.getElementById('profPlanName');
+      const planBtn   = document.getElementById('profPlanBtn');
+      if (_isPremium) {
+        if (premBadge) premBadge.style.display = 'flex';
+        if (banner)    banner.style.display    = 'none';
+        if (planName)  planName.textContent    = '⭐ Premium';
+        if (planBtn)   { planBtn.textContent = 'Aktiv'; planBtn.disabled = true; }
+      } else {
+        if (premBadge) premBadge.style.display = 'none';
+        if (banner)    banner.style.display    = 'flex';
+        if (planName)  planName.textContent    = 'Pulsuz';
+        if (planBtn)   { planBtn.textContent = 'Yüksəlt'; planBtn.disabled = false; }
+      }
+
+      // Badges
+      const badgesEl = document.getElementById('profBadges');
+      if (badgesEl) {
+        let badges = '';
+        badges += _isPremium
+          ? '<span class="profile-badge pb-premium">⭐ Premium</span>'
+          : '<span class="profile-badge pb-free">Pulsuz</span>';
+        // provider
+        const providers = user.providerData || [];
+        const isGoogle = providers.some && providers.some(p => p && p.providerId === 'google.com');
+        if (isGoogle) badges += '<span class="profile-badge pb-provider">🔵 Google</span>';
+        else          badges += '<span class="profile-badge pb-provider">📧 E-poçt</span>';
+        badgesEl.innerHTML = badges;
+      }
+
+      // Provider
+      const providers = user.providerData || [];
+      const isGoogle = providers.some && providers.some(p => p && p.providerId === 'google.com');
+      const provEl = document.getElementById('profRowProviderVal');
+      if (provEl) provEl.textContent = isGoogle ? 'Google hesabı' : 'E-poçt / Şifrə';
+
+      // Şifrə dəyiş bölməsini Google-da gizlət
+      const passSection = document.getElementById('profPasswordSection');
+      if (passSection) passSection.style.display = isGoogle ? 'none' : 'block';
+
+      // Firebase-dən məlumat al
+      try {
+        const snap = await window._fbGet(window._fbRef(window._fbDb, 'users/' + user.uid));
+        const data = snap.val() || {};
+
+        // Qeydiyyat tarixi
+        const dateEl = document.getElementById('profRowDate');
+        if (dateEl && data.createdAt) {
+          const d = new Date(data.createdAt);
+          dateEl.textContent = d.toLocaleDateString('az-AZ', {day:'2-digit', month:'long', year:'numeric'});
+        } else if (dateEl) {
+          dateEl.textContent = 'Bilinmir';
+        }
+
+        // Statistika
+        const stats = data.stats || {};
+        const tests   = stats.testsCompleted || 0;
+        const correct = stats.totalCorrect   || 0;
+        const total   = stats.totalAnswered  || 0;
+        const avgScore = total > 0 ? Math.round((correct / total) * 100) : 0;
+        const streak  = stats.streak || 0;
+
+        document.getElementById('profStatTests').textContent   = tests;
+        document.getElementById('profStatScore').textContent   = avgScore + '%';
+        document.getElementById('profStatCorrect').textContent = correct;
+        document.getElementById('profStatStreak').textContent  = streak + ' 🔥';
+
+      } catch(e) {
+        console.warn('Profile data load error:', e);
+      }
+    }
+
+    // ── Edit Name ───────────────────────────────────────────────
+    function openEditName() {
+      const name = (_currentUser && _currentUser.displayName) || '';
+      const parts = name.split(' ');
+      document.getElementById('enName').value = parts[0] || '';
+      document.getElementById('enSur').value  = parts.slice(1).join(' ') || '';
+      document.getElementById('enErr').textContent = '';
+      document.getElementById('editNameModal').classList.remove('hidden');
+    }
+
+    async function saveEditName() {
+      const name = document.getElementById('enName').value.trim();
+      const sur  = document.getElementById('enSur').value.trim();
+      const errEl = document.getElementById('enErr');
+      errEl.textContent = '';
+      if (!name) { errEl.textContent = 'Ad daxil edin.'; return; }
+      try {
+        const fullName = (name + ' ' + sur).trim();
+        await window._updateProfile(_currentUser, { displayName: fullName });
+        // Firebase-ə də yaz
+        await window._fbSet(window._fbRef(window._fbDb, 'users/'+_currentUser.uid+'/name'), name);
+        await window._fbSet(window._fbRef(window._fbDb, 'users/'+_currentUser.uid+'/surname'), sur);
+        _currentUser.displayName = fullName;
+        document.getElementById('editNameModal').classList.add('hidden');
+        loadProfileData();
+        updateUserBar(_currentUser);
+        toast('Ad dəyişdirildi ✓', 'success');
+      } catch(e) { errEl.textContent = 'Xəta: ' + (e.message||''); }
+    }
+
+    // ── Change Password ──────────────────────────────────────────
+    function openChangePassword() {
+      document.getElementById('cpOld').value  = '';
+      document.getElementById('cpNew').value  = '';
+      document.getElementById('cpNew2').value = '';
+      document.getElementById('cpErr').textContent = '';
+      document.getElementById('changePassModal').classList.remove('hidden');
+    }
+
+    async function saveChangePassword() {
+      const oldPass = document.getElementById('cpOld').value;
+      const newPass = document.getElementById('cpNew').value;
+      const newPass2= document.getElementById('cpNew2').value;
+      const errEl   = document.getElementById('cpErr');
+      errEl.textContent = '';
+      if (!oldPass) { errEl.textContent = 'Köhnə şifrəni daxil edin.'; return; }
+      if (newPass.length < 6) { errEl.textContent = 'Yeni şifrə ən az 6 simvol.'; return; }
+      if (newPass !== newPass2) { errEl.textContent = 'Şifrələr uyğun gəlmir.'; return; }
+      try {
+        // Re-authenticate
+        const { EmailAuthProvider, reauthenticateWithCredential, updatePassword } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+        const cred = EmailAuthProvider.credential(_currentUser.email, oldPass);
+        await reauthenticateWithCredential(_currentUser, cred);
+        await updatePassword(_currentUser, newPass);
+        document.getElementById('changePassModal').classList.add('hidden');
+        toast('Şifrə dəyişdirildi ✓', 'success');
+      } catch(e) {
+        errEl.textContent = authErr(e.code) || 'Xəta baş verdi.';
+      }
+    }
+
+    // ── Stat tracker — quiz bitdikdə çağır ──────────────────────
+    async function saveUserStat(correct, total) {
+      if (!_currentUser) return;
+      try {
+        const ref = window._fbRef(window._fbDb, 'users/'+_currentUser.uid+'/stats');
+        const snap = await window._fbGet(ref);
+        const s = snap.val() || {};
+        const newStats = {
+          testsCompleted: (s.testsCompleted||0) + 1,
+          totalCorrect:   (s.totalCorrect||0)   + correct,
+          totalAnswered:  (s.totalAnswered||0)  + total,
+          lastPlayedAt:   Date.now(),
+          streak: calcStreak(s)
+        };
+        await window._fbSet(ref, newStats);
+      } catch(e) { console.warn('saveUserStat error:', e); }
+    }
+
+    function calcStreak(s) {
+      if (!s.lastPlayedAt) return 1;
+      const diff = Date.now() - s.lastPlayedAt;
+      const msDay = 86400000;
+      if (diff < msDay) return (s.streak||0);         // eyni gün
+      if (diff < msDay*2) return (s.streak||0) + 1;  // ertəsi gün
+      return 1;                                        // fasilə
     }
 
     function deleteQuiz(id) {
