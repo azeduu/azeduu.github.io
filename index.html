@@ -62,9 +62,10 @@
         });
 
         window.addEventListener('load', () => {
+          // appInit həmişə çağırılır — testlər login olmadan da görünür
           setTimeout(() => {
             if (window.appInit) window.appInit();
-          }, 600);
+          }, 800);
         });
     </script>
 
@@ -1783,16 +1784,17 @@
       _currentUser = user || null;
       if (user) {
         updateUserBar(user);
-        // Premium yoxla
+        // Firebase-dən premium yoxla
         window._fbGet(window._fbRef(window._fbDb, 'users/'+user.uid+'/premium'))
           .then(snap => {
             _isPremium = !!snap.val();
             updateUserBar(user);
             if (typeof renderHomeQuizList === 'function') renderHomeQuizList();
           }).catch(()=>{});
-        // RevenueCat init
-        initRC(user.uid);
+        // RevenueCat - ayrıca, xəta olsa da UI bloklanmır
+        initRC(user.uid).catch(e => console.warn('RC init skipped:', e));
       } else {
+        _isPremium = false;
         updateUserBar(null);
         if (typeof renderHomeQuizList === 'function') renderHomeQuizList();
       }
@@ -1829,9 +1831,19 @@
 
     // ── RevenueCat Web ────────────────────────────────────────────
     async function initRC(userId) {
+      // RC xəta verərsə heç nə bloklanmır
+      if (typeof Purchases === 'undefined') {
+        console.warn('RC SDK yüklənmədi, ödəniş sistemi deaktivdir');
+        return;
+      }
       try {
-        if (typeof Purchases === 'undefined') return;
         _rcPurchases = await Purchases.configure(RC_WEB_KEY, userId);
+      } catch(e) {
+        console.warn('RC configure error:', e);
+        return;
+      }
+      // Offerings — xəta olsa "Yüklənir..." qalar, UI bloklanmır
+      try {
         const off = await _rcPurchases.getOfferings();
         _rcOfferings = off;
         if (off && off.current) {
@@ -1840,8 +1852,14 @@
           const an = pkgs.find(p=>p.packageType==='ANNUAL' ||p.identifier.includes('annual')||p.identifier.includes('year'));
           if (mo) document.getElementById('pmMonthlyPrice').textContent = mo.storeProduct.priceString + ' / ay';
           if (an) document.getElementById('pmAnnualPrice').textContent  = an.storeProduct.priceString + ' / il';
+        } else {
+          // Offering qurulmayıb — manual qiymət göstər
+          document.getElementById('pmMonthlyPrice').textContent = 'Aylıq abunə';
+          document.getElementById('pmAnnualPrice').textContent  = 'İllik abunə';
         }
-        // Premium statusunu RC-dən yoxla
+      } catch(e) { console.warn('RC offerings error:', e); }
+      // Premium status
+      try {
         const ci = await _rcPurchases.getCustomerInfo();
         if (ci.entitlements.active && ci.entitlements.active[RC_ENTITLEMENT]) {
           _isPremium = true;
@@ -1851,7 +1869,7 @@
           updateUserBar(_currentUser);
           renderHomeQuizList();
         }
-      } catch(e) { console.warn('RC init error:', e); }
+      } catch(e) { console.warn('RC customer info error:', e); }
     }
 
     async function doPremiumPurchase() {
